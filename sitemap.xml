@@ -5,22 +5,29 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://loggerhead.me/</loc>
-<lastmod>2016-12-09T16:45:27-00:00</lastmod>
+<lastmod>2016-12-10T17:14:18-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://loggerhead.me/archives.html</loc>
-<lastmod>2016-12-09T16:45:27-00:00</lastmod>
+<lastmod>2016-12-10T17:14:18-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://loggerhead.me/categories.html</loc>
-<lastmod>2016-12-09T16:45:27-00:00</lastmod>
+<lastmod>2016-12-10T17:14:18-00:00</lastmod>
 <changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://loggerhead.me/about.html</loc>
+<lastmod>2016-12-10T15:49:31+08:00</lastmod>
+<changefreq>yearly</changefreq>
 <priority>0.5</priority>
 </url>
 

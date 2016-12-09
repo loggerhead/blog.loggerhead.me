@@ -149,7 +149,7 @@ ss -&amp;gt; client: 0x05 0x00 0x00 0x01 0x00 0x00 0x00 0x00 0x10 0x10
 &lt;p&gt;这里 &lt;code&gt;0x7f 0x00 0x00 0x01 0x1f 0x40&lt;/code&gt; 对应的是 &lt;code&gt;127.0.0.1:8000&lt;/code&gt;。需要注意的是，当请求中的 &lt;code&gt;CMD == 0x01&lt;/code&gt; 时，绝大部分 SOCKS5 客户端的实现都会忽略 SOCKS5 服务器返回的 &lt;code&gt;BND.ADDR&lt;/code&gt; 和 &lt;code&gt;BND.PORT&lt;/code&gt; 字段，所以这里的 &lt;code&gt;0x00 0x00 0x00 0x00 0x10 0x10&lt;/code&gt; 只是 shadowsocks 返回的一个无意义的地址和端口&lt;sup id="fnref:bnd.addr"&gt;&lt;a class="footnote-ref" href="#fn:bnd.addr" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
 &lt;h2 id="_3"&gt;传输阶段&lt;/h2&gt;
 &lt;p&gt;SOCKS5 协议只负责建立连接，在完成握手阶段和建立连接之后，SOCKS5 服务器就只做简单的转发了。假如客户端通过 shadowsocks 代理 &lt;code&gt;google.com:80&lt;/code&gt;（用 &lt;code&gt;remote&lt;/code&gt; 表示），那么整个过程如图所示：&lt;/p&gt;
-&lt;p&gt;&lt;img alt="socks example" src="https://dn-loggerhead.qbox.me/socks5-example.svg" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="socks example" src="https://dn-loggerhead.qbox.me/images/socks5-example.svg" /&gt;&lt;/p&gt;
 &lt;p&gt;整个过程中发生的传输可能是这样的：&lt;/p&gt;
 &lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
  2
@@ -246,9 +246,9 @@ remote -&amp;gt; ss -&amp;gt; client
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
 &lt;p&gt;有一点需要提一下：&lt;strong&gt;代理和能翻墙的代理是不一样的&lt;/strong&gt;。比如，下图是普通的 SOCKS5 代理：&lt;/p&gt;
-&lt;p&gt;&lt;img alt="normal-proxy" src="https://dn-loggerhead.qbox.me/normal-proxy.svg" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="normal-proxy" src="https://dn-loggerhead.qbox.me/images/normal-proxy.svg" /&gt;&lt;/p&gt;
 &lt;p&gt;而能翻墙的 SOCKS5 代理是下图这种结构：&lt;/p&gt;
-&lt;p&gt;&lt;img alt="ss-proxy" src="https://dn-loggerhead.qbox.me/ss-proxy.svg" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="ss-proxy" src="https://dn-loggerhead.qbox.me/images/ss-proxy.svg" /&gt;&lt;/p&gt;
 &lt;p&gt;可以看出来，SOCKS5 服务器的实现被拆分成了两部分：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;sslocal 负责与 SOCKS5 客户端进行 SOCKS5 协议相关的通讯（握手并建立连接），在建立连接后将 SOCKS5 客户端发来的数据加密并发送给 ssserver；&lt;/li&gt;
@@ -341,7 +341,7 @@ remote -&amp;gt; ss -&amp;gt; client
 &lt;p&gt;比如：如果客户端连接到 sslocal，第 8 行会返回可读事件，第 30 行会调用 &lt;code&gt;TCPRelay&lt;/code&gt; 的 &lt;code&gt;handle_event&lt;/code&gt; 来处理，&lt;code&gt;handle_event&lt;/code&gt; 发现这是一个可读事件，会调用 &lt;code&gt;accept&lt;/code&gt; 建立新连接。&lt;/p&gt;
 &lt;h2 id="tcprelaypy"&gt;tcprelay.py&lt;/h2&gt;
 &lt;p&gt;Shadowsocks 采用了反应器模式（&lt;a href="https://en.wikipedia.org/wiki/Reactor_pattern"&gt;reactor pattern&lt;/a&gt;）。以下图为例：&lt;/p&gt;
-&lt;p&gt;&lt;img alt="ss-reactor-pattern" src="https://dn-loggerhead.qbox.me/ss-reactor-pattern.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="ss-reactor-pattern" src="https://dn-loggerhead.qbox.me/images/ss-reactor-pattern.png" /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;TCPRelayHandler&lt;/code&gt; 的事件会由 &lt;code&gt;EventLoop&lt;/code&gt; 分发给 &lt;code&gt;TCPRelay&lt;/code&gt;，再经由 &lt;code&gt;TCPRelay&lt;/code&gt; 将事件分发给相应的 &lt;code&gt;TCPRelayHandler&lt;/code&gt; 处理。这个过程发生在 &lt;code&gt;EventLoop&lt;/code&gt; 和 &lt;code&gt;TCPRelay&lt;/code&gt; 的 &lt;code&gt;handle_event&lt;/code&gt; 函数。&lt;/p&gt;
 &lt;p&gt;我们去掉其中的日志处理和错误处理逻辑，看看 &lt;code&gt;handle_event&lt;/code&gt; 函数：&lt;/p&gt;
 &lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
