@@ -37,7 +37,7 @@
 
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.1cd8932.css">
+  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.b04efe5.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -159,10 +159,10 @@ F_{n}=\begin{cases}
 <p>原因在于，<code>fib1(n-1) + fib1(n-2)</code> 中的递归导致算法的时间复杂度是指数型的，也就是 <span class="math">O(2^n)</span><sup id="fnref:fib1 time complexity"><a class="footnote-ref" href="#fn:fib1 time complexity" rel="footnote">2</a></sup>。假设计算 <span class="math">F_n</span> 需要 <span class="math">T(n)</span> 的运算时间，那么 <span class="math">T(n)</span> 等于计算 <span class="math">F_{n-1}</span> 和 <span class="math">F_{n-2}</span> 的时间加上一个常量 <span class="math">C</span>（<code>if</code>、<code>+</code> 和 <code>return</code> 的时间）。</p>
 <div class="math">T(n)=T(n-1)+T(n-2)+C &lt; 2\times T(n-1) = O(2^n) \qquad n\rightarrow\infty</div>
 <p>再来看 <code>fib1(n)</code> 的空间复杂度，容易发现递归的最大深度是 n，所以递归形成的隐式栈占用了 <span class="math">O(n)</span> 的空间，即空间复杂度为 <span class="math">O(n)</span>。如果把递归过程看成一颗树，那么空间复杂度正比于树的高度，时间复杂度正比于树的节点数。</p>
-<p><img alt="complexity of fib1" src="https://dn-loggerhead.qbox.me/images/fib1.svg" /></p>
+<p><img alt="complexity of fib1" src="https://cdn.loggerhead.me/images/fib1.svg" /></p>
 <h1 id="on-on"><span class="math">O(n), O(n)</span></h1>
 <p><code>fib1</code> 进行了很多重复运算，就 <code>fib1(4)</code> 来说，<code>fib1(2)</code> 被计算了 2 次。</p>
-<p><img alt="fib1_4" src="https://dn-loggerhead.qbox.me/images/fib1_4.svg" /></p>
+<p><img alt="fib1_4" src="https://cdn.loggerhead.me/images/fib1_4.svg" /></p>
 <p>发现了这一点后，我们将 <code>fib1</code> 进行改造，记录下每一个算出来的 <span class="math">F_n</span>，避免重复计算，减少运行时间。</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
@@ -177,7 +177,7 @@ F_{n}=\begin{cases}
 </td></tr></table>
 
 <p>如图，<code>fib2(4)</code> 在第一次计算 <code>fib2(2)</code> 时保存了结果，第二次计算 <code>fib2(2)</code> 时就不用再递归计算了，而是直接返回 <code>fib2(2)</code> 的值。</p>
-<p><img alt="fib2_4" src="https://dn-loggerhead.qbox.me/images/fib2_4.svg" /></p>
+<p><img alt="fib2_4" src="https://cdn.loggerhead.me/images/fib2_4.svg" /></p>
 <p>因为递归的最大深度没变，所以 <code>fib2</code> 的空间复杂度还是 <span class="math">O(n)</span>。但是因为每个子问题只需要计算一次，所以时间复杂度变成了 <span class="math">O(n)</span>。</p>
 <div class="math">T(n)=T(n-1)+T(n-2)+C=T(n-1)+C'+C=O(n) \qquad T(n-2)=C'</div>
 <h1 id="on-o1"><span class="math">O(n), O(1)</span></h1>
@@ -195,7 +195,7 @@ F_{n}=\begin{cases}
 </td></tr></table>
 
 <p><code>fib3(4)</code> 的计算过程如下图所示：</p>
-<p><img alt="fib3_4" src="https://dn-loggerhead.qbox.me/images/fib3_4.svg" /></p>
+<p><img alt="fib3_4" src="https://cdn.loggerhead.me/images/fib3_4.svg" /></p>
 <h1 id="olog-n-olog-n"><span class="math">O(\log n), O(\log n)</span></h1>
 <p>在介绍 <span class="math">O(\log n)</span> 的算法前，我们先考虑一下怎么计算 <span class="math">2^n</span>。</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1

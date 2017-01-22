@@ -37,7 +37,7 @@
 
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.1cd8932.css">
+  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.b04efe5.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -273,7 +273,7 @@
 <p>LaTeX 文档必须以 <code>\documentclass</code> 开头。而所有<strong>想要显示的内容</strong>都必须位于 <code>\begin{document}</code> 和 <code>\end{document}</code> 之间。 </p>
 <h2 id="_4">空格</h2>
 <p>LaTeX 第一个与直觉相违背的地方就是空白字符。它既不像C语言全部忽略，也不是有多少就显示多少。而是将<strong>多个空白字符当做一个空格</strong>处理。这里所说的空白字符包括：空格、制表符（tab）或一个换行。</p>
-<p><img alt="spaces example" src="https://dn-loggerhead.qbox.me/images/spaces_example.png" /></p>
+<p><img alt="spaces example" src="https://cdn.loggerhead.me/images/spaces_example.png" /></p>
 <p>左边是输入，右边是输出（下文同）。输入是 <code>你好，[换行][空格x2]世界</code> 。</p>
 <h2 id="_5">换行</h2>
 <p>虽然换行也是空白字符，但对一个换行和多个换行的处理又有不同：</p>
@@ -281,16 +281,16 @@
 <li>一个换行 = 一个空格</li>
 <li>多个换行<strong>表示一个段落的结束和另一个段落的开始</strong>（和 Markdown 一样）。</li>
 </ul>
-<p><img alt="paragraph example" src="https://dn-loggerhead.qbox.me/images/paragraph_example.png" /></p>
+<p><img alt="paragraph example" src="https://cdn.loggerhead.me/images/paragraph_example.png" /></p>
 <h2 id="_6">注释</h2>
 <h3 id="_7">单行注释</h3>
 <p><code>%</code> 表示注释当前行，同时<strong>忽略换行和下一行开头的空白字符</strong>。</p>
-<p><img alt="comment example" src="https://dn-loggerhead.qbox.me/images/comment_example.png" /></p>
+<p><img alt="comment example" src="https://cdn.loggerhead.me/images/comment_example.png" /></p>
 <h3 id="_8">多行注释</h3>
 <p>先在导言区加入 <code>\usepackage{verbatim}</code> ，再像下图一样将注释放在 <code>\begin{comment}</code> 和 <code>\end{comment}</code> 之间就行了。</p>
-<p><img alt="multi-line comment example" src="https://dn-loggerhead.qbox.me/images/multi-line_comment_example.png" /></p>
+<p><img alt="multi-line comment example" src="https://cdn.loggerhead.me/images/multi-line_comment_example.png" /></p>
 <p>因为一个换行等价于一个空格，所以上图多出来一个空格。如果不想要，这时候 <code>%</code> 就派上用场了。</p>
-<p><img alt="multi-line comment example" src="https://dn-loggerhead.qbox.me/images/multi-line_comment_notice_example.png" /></p>
+<p><img alt="multi-line comment example" src="https://cdn.loggerhead.me/images/multi-line_comment_notice_example.png" /></p>
 <h1 id="latex">LaTeX 命令</h1>
 <h2 id="_9">基本格式</h2>
 <p>LaTeX 命令的基本格式如下：</p>
@@ -305,7 +305,7 @@
 <li><code>\command*[optional]{paramter}</code> ，表示命令的变种。如：<code>\section*{}</code></li>
 </ul>
 <p><code>\command</code> 后面的所有空白字符都将被忽略，除非加一对花括号 <code>{}</code> 。</p>
-<p><img alt="command example" src="https://dn-loggerhead.qbox.me/images/command_example.png" /></p>
+<p><img alt="command example" src="https://cdn.loggerhead.me/images/command_example.png" /></p>
 <p>值得注意的是，<a href="http://tex.stackexchange.com/questions/6497/the-scope-of-latex-commands">LaTeX 命令并没有一致的作用域</a>。有些命令只影响它的参数，比如：<code>\emph{foo}</code>，而有些命令却影响整个段落，比如：<code>\noindent</code>。</p>
 <h2 id="_10">环境</h2>
 <p>环境是一种特殊的命令，它对包裹起来的内容起作用，其基本格式如下：</p>
@@ -458,7 +458,7 @@ tlmgr remove &lt;package1&gt; &lt;package2&gt; ...
 <ol>
 <li>
 <p>在 <a href="http://ctan.org/">ctan</a> 搜索需要的宏包，并下载。</p>
-<p><img alt="download_package_from_ctan" src="https://dn-loggerhead.qbox.me/images/download_package_from_ctan.png" /></p>
+<p><img alt="download_package_from_ctan" src="https://cdn.loggerhead.me/images/download_package_from_ctan.png" /></p>
 </li>
 <li>
 <p>解压。通常会得到 .ins 文件、.dtx 文件、INSTALL 和 README。如果不存在 .ins 文件，请查看 INSTALL 和 README。</p>

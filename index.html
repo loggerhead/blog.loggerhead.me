@@ -35,7 +35,7 @@
 
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.1cd8932.css">
+  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.b04efe5.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -95,6 +95,40 @@
   <div class="row">
     <div class="col-md-12">
       <div class="markdown-body article-list">
+      <article>
+        <header class="page-header">
+          <h2><a class="article-title" href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-chao-shi-chu-li.html">Shadowsocks 源码分析——超时处理</a></h2>
+<footer class="post-info">
+  <div class="row">
+    <div class="col-xs-8">
+      <!-- <span class="label label-default">Tags</span> -->
+        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/yuan-ma-fen-xi.html">
+          源码分析
+        </a>
+        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/python.html">
+          Python
+        </a>
+    </div>
+
+    <div class="col-xs-4 time">
+      <time class="pull-right" datetime="2017-01-20T10:00:00+08:00">
+        2017-01-20
+      </time>
+    </div>
+  </div>
+</footer>        </header>
+        <div class="sep"></div>
+        <div class="summary">
+          <p>Shadowsocks 是一款性能很不错的代理工具，它的高性能体现在两个方面：速度快、资源占用少。相信你在读完「<a href="/posts/shadowsocks-yuan-ma-fen-xi-xie-yi-yu-jie-gou.html">协议与结构</a>」和「<a href="/posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html">TCP 代理</a>」这两篇文章后，就能理解为什么 shadowsocks 的速度快了<sup id="fnref:not-understand"><a class="footnote-ref" href="#fn:not-understand" rel="footnote">1</a></sup>。资源占用少主要是因为 shadowsocks 使用了事件循环而不是多线程，另一方面，及时的进行超时和异常处理，能够将空闲的资源回收再利用也是原因之一。本文基于 <a href="https://github.com/loggerhead/shadowsocks/tree/8e8ee5d490ce319b8db9b61001dac51a7da4be63">2.9.0 版本的源码</a>介绍 <code>tcprelay.py</code> 如何进行超时处理。</p>
+
+        </div>
+        <div>
+          <a class="btn btn-default btn-sm" href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-chao-shi-chu-li.html">
+              查看全文
+          </a>
+        </div>
+      </article>
+      <hr>
       <article>
         <header class="page-header">
           <h2><a class="article-title" href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html">Shadowsocks 源码分析——TCP 代理</a></h2>
@@ -372,7 +406,7 @@ F_{n}=\begin{cases}
 </footer>        </header>
         <div class="sep"></div>
         <div class="summary">
-          <p><a href="https://zh.wikipedia.org/wiki/量子密碼學">量子加密</a>号称「绝对安全」绝不是哗众取宠，为什么这样说呢？因为与传统加密算法不同，量子加密的 <strong>原理基于物理定律</strong>，而不是特定数学问题的计算复杂性。因此，无论计算机的运算能力怎么增强，也丝毫不影响量子加密的安全性。本文以 <a href="https://zh.wikipedia.org/wiki/量子密碼學#BB84.E5.8D.8F.E8.AE.AE">BB84 协议</a>来介绍量子加密，下文为了方便不对量子加密和 BB84 协议进行区分。</p>
+          <p><a href="https://zh.wikipedia.org/wiki/量子密碼學">量子加密</a>号称「绝对安全」绝不是哗众取宠，为什么这样说呢？因为与传统加密算法不同，量子加密的<strong>原理基于物理定律</strong>，而不是特定数学问题的计算复杂性。因此，无论计算机的运算能力怎么增强，也丝毫不影响量子加密的安全性。本文以 <a href="https://zh.wikipedia.org/wiki/量子密碼學#BB84.E5.8D.8F.E8.AE.AE">BB84 协议</a>来介绍量子加密，下文为了方便不对量子加密和 BB84 协议进行区分。</p>
 
         </div>
         <div>
@@ -427,49 +461,12 @@ F_{n}=\begin{cases}
 </pre></div>
 </td></tr></table>
 
-<p>通过这几个例子，可以看出 Haskell 表达能力极强。这是因为 Haskell 是一门支持 <em>惰性求值</em>、<em>模式匹配</em>、<em>列表解析</em>、<em>类型类</em> 和 <em>类型推断</em> 的 <em>强静态类型</em> &amp;&amp; <a href="https://en.wikipedia.org/wiki/Functional_programming">纯函数式</a> 语言。</p>
-<p>本文主要介绍 Haskell 的语法，并不会对函数式或 Haskell 的特性进行说明。如果曾经了解过函数式语言，本文可以作为语法简介来读。如果从未接触过函数式，那么你需要 <strong>熟悉至少一门语言</strong>，并辅以适量的<a href="https://www.hackerrank.com/domains/fp/intro">习题</a>才可能入门。</p>
+<p>通过这几个例子，可以看出 Haskell 表达能力极强。这是因为 Haskell 是一门支持<em>惰性求值</em>、<em>模式匹配</em>、<em>列表解析</em>、<em>类型类</em>和<em>类型推断</em>的<em>强静态类型</em> &amp;&amp; <a href="https://en.wikipedia.org/wiki/Functional_programming">纯函数式</a>语言。</p>
+<p>本文主要介绍 Haskell 的语法，并不会对函数式或 Haskell 的特性进行说明。如果曾经了解过函数式语言，本文可以作为语法简介来读。如果从未接触过函数式，那么你需要<strong>熟悉至少一门语言</strong>，并辅以适量的<a href="https://www.hackerrank.com/domains/fp/intro">习题</a>才可能入门。</p>
 
         </div>
         <div>
           <a class="btn btn-default btn-sm" href="https://loggerhead.me/posts/haskell-kuai-su-ru-men.html">
-              查看全文
-          </a>
-        </div>
-      </article>
-      <hr>
-      <article>
-        <header class="page-header">
-          <h2><a class="article-title" href="https://loggerhead.me/posts/erlang-he-bian-ma-feng-ge-dui-da-duo-shu-fang-yu-xing-bian-ma-feng-ge-de-si-kao.html">Erlang 和编码风格--对大多数防御性编码风格的思考</a></h2>
-<footer class="post-info">
-  <div class="row">
-    <div class="col-xs-8">
-      <!-- <span class="label label-default">Tags</span> -->
-        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/fan-yi.html">
-          翻译
-        </a>
-        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/erlang.html">
-          Erlang
-        </a>
-        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/bian-cheng-yu-yan.html">
-          编程语言
-        </a>
-    </div>
-
-    <div class="col-xs-4 time">
-      <time class="pull-right" datetime="2015-09-20T12:09:00+08:00">
-        2015-09-20
-      </time>
-    </div>
-  </div>
-</footer>        </header>
-        <div class="sep"></div>
-        <div class="summary">
-          <p>原文：<a href="https://medium.com/@jlouis666/erlang-and-code-style-b5936dceb5e4">Erlang and code style--Musings on mostly defensive programming styles</a></p>
-
-        </div>
-        <div>
-          <a class="btn btn-default btn-sm" href="https://loggerhead.me/posts/erlang-he-bian-ma-feng-ge-dui-da-duo-shu-fang-yu-xing-bian-ma-feng-ge-de-si-kao.html">
               查看全文
           </a>
         </div>

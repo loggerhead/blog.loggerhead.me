@@ -1,0 +1,526 @@
+<!Doctype html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+<meta name="renderer" content="webkit">
+<meta name="HandheldFriendly" content="True">
+<meta name="google-site-verification" content="xRiYQAQ0h0n3RXqrq0GgrdFm3BMFqDvDwwiRylv0YhQ">
+
+<link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/android-chrome-192x192.png" sizes="192x192">
+<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-TileImage" content="/mstile-144x144.png">
+<meta name="theme-color" content="#ffffff">
+<meta name="author" content="loggerhead" />    <meta name="keywords" content="源码分析,Python" />
+
+  <meta name="description" content="Shadowsocks 是一个性能很不错的代理，它的高性能体现在两个方面：速度快、资源占用少。相信你在读完「协议与结构」和「TCP 代理」这两篇文章后，就能理解为什么 shadowsocks 的速度快了1。资源占用少主要是因为 shadowsocks 使用了事件循环而不是多线程，另一方面，及时的进行超时和异常处理，能够将空闲的资源回收再利用也是原因之一。本文主要介绍 tcprelay.py 如何处理超时和异常。" />
+
+  <title>  Shadowsocks 源码分析——超时与异常处理
+</title>
+
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="../theme/css/style.1cd8932.css">
+ 
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+  <link href="../atom.xml" rel="alternate" type="application/atom+xml">
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="..">loggerhead's blog</a>
+    </div>
+    <div class="navbar-collapse navbar-ex1-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="../index.html">首页</a>
+        </li>
+        <li>
+          <a href="../archives.html">归档</a>
+        </li>
+        <li>
+          <a href="../about.html">关于</a>
+        </li>
+      </ul>
+      <div class="navbar-right">
+        <ul class="nav navbar-nav">
+          <form class="navbar-form" role="search" action="https://www.google.com" target="_blank">
+    <div class="input-group">
+        <input type="text" class="search-query form-control" placeholder="搜索博客" name="q">
+        <input type="hidden" name="cx" value="005992921674098475959:hyjwdbdoqt8">
+        <input type="hidden" name="ie" value="UTF-8">
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="submit">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
+        </span>
+    </div>
+</form>
+        </ul>
+        <ul class="nav navbar-nav">
+          <li><a href="https://github.com/loggerhead" target="_blank">GitHub</a></li>
+          <li><a href="https://www.hackerrank.com/loggerhead" target="_blank">HackerRank</a></li>
+          <li><a href="https://douban.com/people/loggerhead" target="_blank">豆瓣</a></li>
+        </ul>
+      </div>
+    </div><!--/.navbar-header -->
+  </div><!--/.container -->
+</nav><!--/.navbar -->
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="markdown-body article-list">
+  <section id="content">
+    <article>
+      <header class="page-header">
+        <h1>
+          <a class="article-title" href="../posts/shadowsocks-yuan-ma-fen-xi-chao-shi-yu-yi-chang-chu-li.html" rel="bookmark" title="Permalink to Shadowsocks 源码分析——超时与异常处理">
+            Shadowsocks 源码分析——超时与异常处理
+          </a>
+        </h1>
+<footer class="post-info">
+  <div class="row">
+    <div class="col-xs-8">
+      <!-- <span class="label label-default">Tags</span> -->
+        <a class="tag btn btn-xs" href="../tag/yuan-ma-fen-xi.html">
+          源码分析
+        </a>
+        <a class="tag btn btn-xs" href="../tag/python.html">
+          Python
+        </a>
+    </div>
+
+    <div class="col-xs-4 time">
+      <time class="pull-right" datetime="2017-01-20T10:00:00+08:00">
+        2017-01-20
+      </time>
+    </div>
+  </div>
+</footer>        <hr>
+      </header>
+      <div class="entry-content">
+        <p>Shadowsocks 是一个性能很不错的代理，它的高性能体现在两个方面：速度快、资源占用少。相信你在读完「<a href="/posts/shadowsocks-yuan-ma-fen-xi-xie-yi-yu-jie-gou.html">协议与结构</a>」和「<a href="/posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html">TCP 代理</a>」这两篇文章后，就能理解为什么 shadowsocks 的速度快了<sup id="fnref:not-understand"><a class="footnote-ref" href="#fn:not-understand" rel="footnote">1</a></sup>。资源占用少主要是因为 shadowsocks 使用了事件循环而不是多线程，另一方面，及时的进行超时和异常处理，能够将空闲的资源回收再利用也是原因之一。本文主要介绍 <code>tcprelay.py</code> 如何处理超时和异常。</p>
+
+
+<div class="toc">
+<ul>
+<li><a href="#_1">超时处理</a><ul>
+<li><a href="#eventlooprun">EventLoop.run</a></li>
+<li><a href="#tcprelayupdate_activity">TCPRelay.update_activity</a></li>
+<li><a href="#tcprelay_sweep_timeout">TCPRelay._sweep_timeout</a></li>
+</ul>
+</li>
+<li><a href="#_2">总结</a></li>
+</ul>
+</div>
+<h1 id="_1">超时处理</h1>
+<p>超时是网络编程中常见的一种需要处理的情况，如果不进行处理，可能会使得不活跃的 TCP 连接占用不必要的资源。Shadowsocks 经常被人运行在内存很小的 VPS 上，所以这部分的处理是必要的。与之相关的函数有：</p>
+<ul>
+<li>TCPRelayHandler<ul>
+<li><code>update_activity</code>: 只是简单的调用了 <code>TCPRelay.update_activity</code>；</li>
+<li><code>destroy</code>: 销毁对象；</li>
+</ul>
+</li>
+<li>TCPRelay<ul>
+<li><code>handle_periodic</code>: 被 <code>EventLoop.run</code> 调用，调用 <code>_sweep_timeout</code> 定期清理一段时间内不活跃的 <code>TCPRelayHandler</code>；</li>
+<li><code>update_activity</code>: 更新超时队列；</li>
+<li><code>_sweep_timeout</code>: 清理超时队列；</li>
+<li><code>remove_handler</code>: 将相关的 <code>TCPRelayHandler</code> 从超时队列中删除；</li>
+</ul>
+</li>
+</ul>
+<p>其中的关键是 <code>EventLoop.run</code>、<code>TCPRelay._sweep_timeout</code> 和 <code>TCPRelay.update_activity</code>，其它的函数在弄懂它们仨的逻辑后就很容易懂了。</p>
+<h2 id="eventlooprun">EventLoop.run</h2>
+<p>我们把不相关的代码去掉，简化逻辑：</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stopping</span><span class="p">:</span>
+        <span class="n">asap</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="n">TIMEOUT_PRECISION</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">IOError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">errno_from_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="n">errno</span><span class="o">.</span><span class="n">EPIPE</span><span class="p">,</span> <span class="n">errno</span><span class="o">.</span><span class="n">EINTR</span><span class="p">):</span>
+                <span class="c1"># EPIPE: Happens when the client closes the connection</span>
+                <span class="c1"># EINTR: Happens when received a signal</span>
+                <span class="c1"># handles them as soon as possible</span>
+                <span class="n">asap</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+        <span class="c1"># handle_events(events)</span>
+
+        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">asap</span> <span class="ow">or</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_time</span> <span class="o">&gt;=</span> <span class="n">TIMEOUT_PRECISION</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_periodic_callbacks</span><span class="p">:</span>
+                <span class="n">callback</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_last_time</span> <span class="o">=</span> <span class="n">now</span>
+</pre></div>
+</td></tr></table>
+
+<p>这段代码的关键在于第 17 到 21 行：</p>
+<ul>
+<li>每隔 <code>TIMEOUT_PRECISION</code>（10 秒）调用在 <code>self._periodic_callbacks</code> 中的所有回调函数；</li>
+<li>如果 <code>self.poll</code> 抛出异常是因为对端断开了连接或者收到了信号，那么立即调用所有的回调函数；</li>
+</ul>
+<p><code>self._periodic_callbacks</code> 是通过 <code>add_periodic</code> 函数来添加回调函数的，我们在项目中搜索它，会发现在 <code>TCPRelay</code>、<code>UDPRelay</code> 和 <code>DNSResolver</code> 的 <code>add_to_loop</code> 中它被调用：</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">loop</span><span class="o">.</span><span class="n">add_periodic</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_periodic</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+<p>所以，第 20 行的 <code>callback</code> 其实就是 <code>TCPRelay.handle_periodic</code>、<code>UDPRelay.handle_periodic</code> 或 <code>DNSResolver.handle_periodic</code>。</p>
+<h2 id="tcprelayupdate_activity">TCPRelay.update_activity</h2>
+<p>我们删除注释，简单的改写代码：</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">update_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">data_len</span><span class="p">):</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+    <span class="c1"># lower timeout modification frequency</span>
+    <span class="k">if</span> <span class="n">now</span> <span class="o">-</span> <span class="n">handler</span><span class="o">.</span><span class="n">last_activity</span> <span class="o">&gt;=</span> <span class="n">eventloop</span><span class="o">.</span><span class="n">TIMEOUT_PRECISION</span><span class="p">:</span>
+        <span class="n">handler</span><span class="o">.</span><span class="n">last_activity</span> <span class="o">=</span> <span class="n">now</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handler_to_timeouts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">hash</span><span class="p">(</span><span class="n">handler</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># delete is O(n), so we just set it to None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_timeouts</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timeouts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_handler_to_timeouts</span><span class="p">[</span><span class="nb">hash</span><span class="p">(</span><span class="n">handler</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_timeouts</span><span class="p">)</span>
+</pre></div>
+</td></tr></table>
+
+<p>它会每隔 10 秒以上更新一次超时队列（<code>self._timeouts</code>），将 <code>handler</code> 挪到队列尾。这里有几个小细节：</p>
+<ul>
+<li>在真正代理的情况下，一个活跃的 TCP 连接会使得 <code>update_activity</code> 被频繁调用，第一个 <code>if</code> 降低了超时队列被更新的频率<sup id="fnref:lower-modify"><a class="footnote-ref" href="#fn:lower-modify" rel="footnote">2</a></sup>；</li>
+<li>因为 <code>self._handler_to_timeouts</code> 是一个字典，所以需要 <code>hash(handler)</code> 才能将 <code>handler</code> 映射为 key 来使用；</li>
+<li><code>self._timeouts[index] = None</code> 通过使用 <code>None</code> 来占位，将原本删除列表元素的复杂度从 O(n) 降到了 O(1)；</li>
+<li>最后一行将 <code>handler</code> 与它在超时队列中的下标联系起来（这里是个 bug，应该是 <code>len(self._timeouts)-1</code>）。</li>
+</ul>
+<h2 id="tcprelay_sweep_timeout">TCPRelay._sweep_timeout</h2>
+<p>重头戏来了，<code>_sweep_timeout</code> 是整个超时处理部分最难懂也是最核心的函数。我们去除日志和注释，将该函数的代码转换为等价的逻辑：</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_sweep_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timeouts</span><span class="p">:</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timeout_offset</span>
+        <span class="k">while</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_timeouts</span><span class="p">):</span>
+            <span class="n">handler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timeouts</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">handler</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">now</span> <span class="o">-</span> <span class="n">handler</span><span class="o">.</span><span class="n">last_activity</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="c1"># timeout</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">handler</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_timeouts</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+                    <span class="n">pos</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pos</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">clean_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">TIMEOUTS_CLEAN_SIZE</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_timeouts</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pos</span> <span class="o">&gt;</span> <span class="n">clean_size</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_timeouts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timeouts</span><span class="p">[</span><span class="n">pos</span><span class="p">:]</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handler_to_timeouts</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_handler_to_timeouts</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-=</span> <span class="n">pos</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timeout_offset</span> <span class="o">=</span> <span class="n">pos</span>
+</pre></div>
+</td></tr></table>
+
+<p><code>self._timeout_offset</code> 记录了每次停止清理前，最后停留的位置，它的初始值是 0。第 4、5 行会从每次清理结束的位置重新开始遍历超时队列，继续这次的清理（类似于下载软件的「断点续传」功能）。循环里面的逻辑是：</p>
+<ol>
+<li>从上次中断的位置（<code>self._timeout_offset</code>）开始遍历超时队列（<code>self._timeouts</code>）；</li>
+<li>如果没有超时，说明后面的 <code>handler</code> 都没有超时，此时退出循环，避免对整个队列进行遍历，降低运算时间；否则销毁超时的 <code>TCPRelayHandler</code>。这里告诉我们 <code>self._timeouts</code> 实际上是个优先级队列，<code>TCPRelay.update_activity</code> 函数的最后两行保证了它的元素有序，所以才会有「如果没有超时，说明后面的 <code>handler</code> 都没有超时」；</li>
+</ol>
+<p>接下来的逻辑是对 <code>self._timeouts</code> 调整大小，收回多余的空间，因为 <code>self._timeouts</code> 占用的容量在循环前后没有变化，比如：执行 <code>while</code> 之前是 100 个元素，执行完以后 <code>self._timeouts</code> 还是 100 个元素。这里的 <code>if</code> 说明只有在超时的 <code>handler</code> 达到一定数量以后（<code>pos</code> 变量同时起到了游标和计数的功能），才调整 <code>self._timeouts</code> 的大小。因为 <code>self._timeouts</code> 是优先级队列，<code>pos</code> 之前的都超时了，这部分空间应该回收，所以列表里面的元素全部往前挪 <code>pos</code> 个位置就行了。</p>
+<h1 id="_2">总结</h1>
+<p>在分析完 <code>EventLoop.run</code>、<code>TCPRelay._sweep_timeout</code> 和 <code>TCPRelay.update_activity</code> 三个函数以后，我们可以把整个超时处理的过程整理一下：</p>
+<ul>
+<li>在事件循环中每隔 10 秒清理一次超时队列；</li>
+<li><code>TCPRelayHandler</code> 对象通过调用 <code>update_activity</code> 将自己挪到超时队列的队尾。</li>
+</ul>
+<p>其中 <code>TCPRelayHandler.update_activity</code> 在三个函数中被调用：</p>
+<ul>
+<li><code>__init__</code></li>
+<li><code>_on_local_read</code></li>
+<li><code>_on_remote_read</code></li>
+</ul>
+<p>也就是，建立连接或出现读事件说明 <code>TCPRelayHandler</code> 还活跃。</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:not-understand">
+<p>如果读完还是不能理解，可能是我遗漏了某些细节，或者没写明白 :P ，欢迎把疑问或建议<a href="mailto:lloggerhead@gmail.com">发邮件</a>告诉我，或者留言在相应文章下面&#160;<a class="footnote-backref" href="#fnref:not-understand" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:lower-modify">
+<p><code>if</code> 里面的语句时间复杂度是 O(1)，似乎这个 <code>if</code> 是多余的，可能是作者考虑到能降低 CPU 占用率吧&#160;<a class="footnote-backref" href="#fnref:lower-modify" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+      </div>
+    </article>
+  </section>
+    <div id="disqus_thread"></div>
+<script>
+var disqus_config = function () {
+    this.page.identifier = "Shadowsocks 源码分析——超时与异常处理";
+};
+
+(function() {
+    var d = document, s = d.createElement('script');
+    s.async = true;
+    s.src = "//loggerhead.disqus.com/embed.js";
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();
+</script>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <footer class="page-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-8">
+        <p>
+          Copyright&nbsp;&copy;&nbsp;2017&nbsp;-&nbsp;loggerhead
+        </p>
+      </div>
+      <div class="col-xs-4">
+        <p class="pull-right">
+          <a href="#" class="back-to-top">
+            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+            回到顶部
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <div class="row hidden-when-phone">
+      <div class="col-xs-8">
+        <p>
+          Powered by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a>
+          &middot;
+          <a href="http://www.miitbeian.gov.cn/" target="_blank">粤ICP备16007488号</a>
+        </p>
+
+        <p>
+          本站文章均为原创，并遵循 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh_TW" target="_blank">CC BY-SA 4.0 协议</a>
+        </p>
+      </div><!--/.col-xs-8 -->
+
+      <div class="col-xs-4">
+        <p class="pull-right">
+          <a href="https://portal.qiniu.com/signup?code=3lg1w78srwitul" target="_blank">
+            <img style="height: 45px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFUAAAA5CAMAAABwHZdJAAAAnFBMVEUAAAAZivoZivoYiPoZifoZifoZifsaivgJkf8ZifoZifoYifoZifsZifoZifoYifsZifkbiv8ZifoZifoYiPsbh/8ZifoYifsZifsYivkZifkYifkZifkZiPoZifgUiP8ZifoZifoZifoZifoYifoYiPoZifsZifoZifsZifoZifoYifsYifsZivoaiPkYifkZifsYiPoZifoZifprs5E2AAAAM3RSTlMAZpc001w6GgSB/L2x9+BLKBL02j8J7eWriYZTUC8hDOjOuO+ln3hgRcnFfHNuWFZHao/W18NFAAACc0lEQVRYw63W6XqiMBgF4MgmCiIKKqBQcK/j1jn3f29jhthUJUhS3j8aeDzgl5WsHNI2wyPAn5ZDI0yJBgxbDe3R90wB+C2GdgB0CTGA1ai10AWA5e3zDCCYtBQ6xI1Fv+UADLu90IJQO9DYjxZC56DCsuHhJujyu7bjzBU7Cjiw1h7UVOepA6AnHZqA4gNqWbZ35OcFSy5z4pYhGrkb4emKBsCVCrW8MmJq82smSgarwhbA2JaaUEz4OHeZHu/Ma/MXLcDE5IEHJqC9r7N6NNLVcHd4vtXHnRMSQlt5o8xRb4y7fPLyL8C5V4N+6A3es7fCt35WuS5wA9wk7zL3mz4Y9hbCWC6oS7TDOMBP/VC0Njz5jOdZZS2tUzTDo7GwXvoKL2aHTfI1v4Z6mqZWOLyc4qgY40WQ1RT/E2rc+gX6L+Q12FCHHmQZVoPFR4OMxmum7qK5dfMNer9EM5EleVZ4b6qlRI6FN8buTn4DzdhvC1QxtMuIKLCnoAbd7ny7doJ8UDbzYLk5Du/zyNc0yVg2yzrsIaPM9/1s9LDrxEAhmbouU5fi2W2wsaowCAYT0R6Q48aUTDVBiQ+3BShdcWhpdaefgdzg4tujRypNQRlEloeSX7NtRNKpDkrHmpuJdKqGklNVHpRM6dQjIOyRHt+rJS3ALMiLGX+gpBTCsRUCikOATMYozUSzGS6RZ4BJRc9LFFJdMFtRxU2F1BiCsbXhxzV5X2D6L7OVXVfZD86oPJfbLpiZrZDq41vUuZj/nXeJB14ZFTPUOymlblGr/6GUaq9Qp0PU6KixJqoscWk1ou4j8SpL6u7J7+hm59miS+r9A2xo/FvmwrFSAAAAAElFTkSuQmCC" />
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+    <script src="../theme/js/bag.2.0.2.min.js"></script>
+
+<script id="myscripts">
+bag = new window.Bag();
+
+bag.require([
+    "//cdn.bootcss.com/jquery/2.2.1/jquery.min.js",
+    "//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"
+]);
+
+function load_css(url, done) {
+    var link  = document.createElement('link');
+    link.rel  = 'stylesheet';
+    link.href = url;
+    link.onload = done;
+    document.head.appendChild(link);
+}
+
+function load_js(url, done) {
+    var script = document.createElement('script');
+    script.src = url;
+    script.onload = done;
+    document.body.appendChild(script);
+}
+
+function gestureStart() {
+    for (i = 0; i < metas.length; i++) {
+        if (metas[i].name == "viewport") {
+            metas[i].content = "width=device-width, minimum-scale=0.25, maximum-scale=1.6";
+        }
+    }
+}
+
+(function screen_suit() {
+    var metas = document.getElementsByTagName('meta');
+    var ua = navigator.userAgent;
+    if (ua.match(/iPhone/i)) {
+        for (var i = 0; i < metas.length; i++) {
+            if (metas[i].name == "viewport") {
+                metas[i].content = "width=device-width, minimum-scale=1.0, maximum-scale=1.0";
+            }
+        }
+        document.addEventListener("gesturestart", gestureStart, false);
+    }
+})();
+
+// See https://gist.github.com/vartan/ab195e5a502a47e0c3e5
+(function fix_hover_behavior() {
+    if('ontouchstart' in document.documentElement) {
+        for(var sheetI = document.styleSheets.length - 1; sheetI >= 0; sheetI--) {
+            var sheet = document.styleSheets[sheetI];
+            if(sheet.cssRules) {
+                for(var ruleI = sheet.cssRules.length - 1; ruleI >= 0; ruleI--) {
+                    var rule = sheet.cssRules[ruleI];
+                    if(rule.selectorText) {
+                        rule.selectorText = rule.selectorText.replace(":hover", ":active");
+                    }
+                }
+            }
+        }
+    }
+})();
+
+(function add_class_to_chinese_em(class_name) {
+    var ems = document.getElementsByTagName("em");
+
+    for (var i = 0; i < ems.length; i++) {
+        var text = ems[i].textContent;
+        // if has chinese char
+        if(/.*[\u4e00-\u9fa5]+.*$/.test(text)) {
+            ems[i].className += " " + class_name;
+        }
+    }
+})('chinese');
+
+// IE10 viewport hack for Surface/desktop Windows 8 bug
+(function fix_ie10_viewport_bug() {
+    if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+        bag.require([
+            "//maxcdn.bootstrapcdn.com/css/ie10-viewport-bug-workaround.css",
+            "//maxcdn.bootstrapcdn.com/js/ie10-viewport-bug-workaround.js"
+        ]);
+    }
+})();
+
+(function load_katex_when_need(class_name) {
+    var maths = document.getElementsByClassName(class_name);
+    if (maths.length == 0) {
+        return;
+    }
+
+    bag.require([
+        "//cdn.bootcss.com/KaTeX/0.6.0/katex.min.js"
+    ]).then(function() {
+        for (var i = 0; i < maths.length; i++) {
+            var math = maths[i];
+
+            var displayMode = null;
+            if (math.tagName == "SPAN") {
+                displayMode = false;
+            } else if (math.tagName == "DIV") {
+                displayMode = true;
+            }
+
+            if (displayMode === null) {
+                console.log("Cannot render " + math);
+            } else {
+                try {
+                    katex.render(math.textContent, maths[i], { displayMode: displayMode });
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        }
+    });
+
+    load_css("//cdn.bootcss.com/KaTeX/0.6.0/katex.min.css");
+})("math");
+</script>
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script>
+  bag.require([
+    "//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js",
+    "//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"
+  ]);
+  </script>
+<![endif]-->
+ 
+</body>
+</html>

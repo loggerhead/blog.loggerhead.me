@@ -37,7 +37,7 @@
 
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.1cd8932.css">
+  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.b04efe5.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -148,8 +148,8 @@
 <h1 id="_1">模块与包</h1>
 <p>在了解 import 之前，有两个概念必须提一下：</p>
 <ul>
-<li>模块: 一个 <code>.py</code> <strong>文件</strong> 就是一个模块（module）</li>
-<li>包: <code>__init__.py</code> 文件所在 <strong>目录</strong> 就是包（package）</li>
+<li>模块: 一个 <code>.py</code> <strong>文件</strong>就是一个模块（module）</li>
+<li>包: <code>__init__.py</code> 文件所在<strong>目录</strong>就是包（package）</li>
 </ul>
 <p>当然，这只是极简版的概念。实际上包是一种特殊的模块，而任何定义了 <code>__path__</code> 属性的模块都被当做包。只不过，咱们日常使用中并不需要知道这些。</p>
 <h1 id="import">两种形式的 import</h1>
@@ -199,9 +199,9 @@
 </ol>
 <p>而 <code>sys.path</code> 在初始化时，又会按照顺序添加以下路径：</p>
 <ol>
-<li><strong><code>foo.py</code> 所在目录</strong>（如果是软链接，那么是真正的 <code>foo.py</code> 所在目录）或 <strong>当前目录</strong></li>
-<li><strong>环境变量 <code>PYTHONPATH</code></strong> 中列出的目录（类似环境变量 <code>PATH</code>，由用户定义，默认为空）</li>
-<li><strong><code>site</code> 模块</strong> 被 import 时添加的路径<sup id="fnref:import-site"><a class="footnote-ref" href="#fn:import-site" rel="footnote">1</a></sup>（<code>site</code> 会在运行时被自动 import）</li>
+<li><strong><code>foo.py</code> 所在目录</strong>（如果是软链接，那么是真正的 <code>foo.py</code> 所在目录）或<strong>当前目录</strong>；</li>
+<li><strong>环境变量 <code>PYTHONPATH</code></strong>中列出的目录（类似环境变量 <code>PATH</code>，由用户定义，默认为空）；</li>
+<li><strong><code>site</code> 模块</strong>被 import 时添加的路径<sup id="fnref:import-site"><a class="footnote-ref" href="#fn:import-site" rel="footnote">1</a></sup>（<code>site</code> 会在运行时被自动 import）。</li>
 </ol>
 <p><code>import site</code> 所添加的路径一般是 <code>XXX/site-packages</code>（Ubuntu 上是 <code>XXX/dist-packages</code>），比如在我的机器上是 <code>/usr/local/lib/python2.7/site-packages</code>。同时，通过 <code>pip</code> 安装的包也是保存在这个目录下的。如果懒得记 <code>sys.path</code> 的初始化过程，可以简单的认为 import 的查找顺序是：</p>
 <ol>

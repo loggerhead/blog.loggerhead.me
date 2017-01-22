@@ -37,7 +37,7 @@
 
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.1cd8932.css">
+  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.b04efe5.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -180,14 +180,14 @@
 </div>
 <h1 id="_1">基本原理</h1>
 <p>Git 管理项目时，文件在三个区域转移：工作区，暂存区，以及本地仓库。</p>
-<p><img alt="git areas" src="https://dn-loggerhead.qbox.me/images/git-areas.png" /></p>
+<p><img alt="git areas" src="https://cdn.loggerhead.me/images/git-areas.png" /></p>
 <p>简单的说，工作区就是 <code>.git</code> 所在目录，暂存区就是 <code>.git/index</code> 文件，本地仓库就是 <code>.git</code> 目录。实际上，暂存区是一个包含文件索引的目录树，记录了文件的各种信息（文件名、文件长度、修改时间等），而文件内容则存放在 <code>.git/objects</code> 目录下。</p>
-<p><img alt="git stage" src="https://dn-loggerhead.qbox.me/images/git-stage.png" /></p>
+<p><img alt="git stage" src="https://cdn.loggerhead.me/images/git-stage.png" /></p>
 <p>Git 将 commit、文件、目录统统视为对象。对象以 <code>SHA1</code> 值作为指纹，与其他对象相区分，Git 命令操作的最小单位是对象。
 Git 会将文件的副本存放在 .git 文件夹下，每个文件都根据文件内容进行操作。</p>
-<p><img alt="git objects" src="https://dn-loggerhead.qbox.me/images/git-commit-and-tree.png" /></p>
+<p><img alt="git objects" src="https://cdn.loggerhead.me/images/git-commit-and-tree.png" /></p>
 <p>由 Git 管理的文件始终在四种状态之间迁移，分别是：未跟踪（Untracked）、未修改（Unmodified）、已修改（Modified）或已暂存（Staged）。</p>
-<p><img alt="git file lifecycle" src="https://dn-loggerhead.qbox.me/images/git-lifecycle.png" /></p>
+<p><img alt="git file lifecycle" src="https://cdn.loggerhead.me/images/git-lifecycle.png" /></p>
 <p>HEAD、分支（branch）、标签（tag）都是指针，均直接或间接指向相应的 commit。HEAD 始终指向当前分支，分支和标签指向对应的 commit。通过 <code>git cat-file -p &lt;SHA1&gt;</code> 可查看 commit 内容。</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -217,7 +217,7 @@ add ldconfig explain
 </pre></div>
 </td></tr></table>
 
-<p><img alt="branch, tag and history" src="https://dn-loggerhead.qbox.me/images/git-branch-and-history.png" /></p>
+<p><img alt="branch, tag and history" src="https://cdn.loggerhead.me/images/git-branch-and-history.png" /></p>
 <h1 id="gitignore">.gitignore 文件</h1>
 <p>.gitignore 文件包含一些模式，用以描述不想跟踪的文件。</p>
 <h2 id="_2">模式规则</h2>

@@ -34,7 +34,7 @@
 
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.1cd8932.css">
+  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.b04efe5.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -173,8 +173,8 @@
 </pre></div>
 </td></tr></table>
 
-<p>通过这几个例子，可以看出 Haskell 表达能力极强。这是因为 Haskell 是一门支持 <em>惰性求值</em>、<em>模式匹配</em>、<em>列表解析</em>、<em>类型类</em> 和 <em>类型推断</em> 的 <em>强静态类型</em> &amp;&amp; <a href="https://en.wikipedia.org/wiki/Functional_programming">纯函数式</a> 语言。</p>
-<p>本文主要介绍 Haskell 的语法，并不会对函数式或 Haskell 的特性进行说明。如果曾经了解过函数式语言，本文可以作为语法简介来读。如果从未接触过函数式，那么你需要 <strong>熟悉至少一门语言</strong>，并辅以适量的<a href="https://www.hackerrank.com/domains/fp/intro">习题</a>才可能入门。</p>
+<p>通过这几个例子，可以看出 Haskell 表达能力极强。这是因为 Haskell 是一门支持<em>惰性求值</em>、<em>模式匹配</em>、<em>列表解析</em>、<em>类型类</em>和<em>类型推断</em>的<em>强静态类型</em> &amp;&amp; <a href="https://en.wikipedia.org/wiki/Functional_programming">纯函数式</a>语言。</p>
+<p>本文主要介绍 Haskell 的语法，并不会对函数式或 Haskell 的特性进行说明。如果曾经了解过函数式语言，本文可以作为语法简介来读。如果从未接触过函数式，那么你需要<strong>熟悉至少一门语言</strong>，并辅以适量的<a href="https://www.hackerrank.com/domains/fp/intro">习题</a>才可能入门。</p>
 
         </div>
         <div>
@@ -245,7 +245,7 @@
 </footer>        </header>
         <div class="sep"></div>
         <div class="summary">
-          <p>在很多语言中，我们都能看到 <strong>函数式范型</strong>、<strong>动态类型</strong>、<strong>类型系统</strong> 的身影，而 Erlang 在此基础上发展出了一些自成一派的特点：</p>
+          <p>在很多语言中，我们都能看到<strong>函数式范型</strong>、<strong>动态类型</strong>、<strong>类型系统</strong>的身影，而 Erlang 在此基础上发展出了一些自成一派的特点：</p>
 <ul>
 <li><strong>轻量级进程</strong>。Erlang 的进程既不是操作系统层面的进程，也不是线程，而是由 Erlang 虚拟机进行管理调度的无状态的进程。建立一个进程的成本非常低，在博主机器上（2.4 GHz Intel Core i5，8 GB 1600 MHz DDR3）平均只需要 2~4 us，而建立 80 万个进程也只花费了几秒的时间，并且据官方说法，建立一个进程的内存占用不到 400 字。</li>
 <li><strong>消息原语</strong>。Erlang 直接在语言层面支持进程间通讯，并且在内部对并发进行了同步处理，用户不需要再关心多进程并发会不会发生同步问题，大大降低了在进程间传递消息的难度。例如，一句话就能搞定发消息：<code>Pid ! Message.</code>，收消息也就多个匹配和处理的过程：<code>receive Message -&gt; handle(Message) end.</code>。</li>

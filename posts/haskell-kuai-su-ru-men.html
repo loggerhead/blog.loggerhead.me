@@ -37,7 +37,7 @@
 
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.1cd8932.css">
+  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.b04efe5.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -147,8 +147,8 @@
 </pre></div>
 </td></tr></table>
 
-<p>通过这几个例子，可以看出 Haskell 表达能力极强。这是因为 Haskell 是一门支持 <em>惰性求值</em>、<em>模式匹配</em>、<em>列表解析</em>、<em>类型类</em> 和 <em>类型推断</em> 的 <em>强静态类型</em> &amp;&amp; <a href="https://en.wikipedia.org/wiki/Functional_programming">纯函数式</a> 语言。</p>
-<p>本文主要介绍 Haskell 的语法，并不会对函数式或 Haskell 的特性进行说明。如果曾经了解过函数式语言，本文可以作为语法简介来读。如果从未接触过函数式，那么你需要 <strong>熟悉至少一门语言</strong>，并辅以适量的<a href="https://www.hackerrank.com/domains/fp/intro">习题</a>才可能入门。</p>
+<p>通过这几个例子，可以看出 Haskell 表达能力极强。这是因为 Haskell 是一门支持<em>惰性求值</em>、<em>模式匹配</em>、<em>列表解析</em>、<em>类型类</em>和<em>类型推断</em>的<em>强静态类型</em> &amp;&amp; <a href="https://en.wikipedia.org/wiki/Functional_programming">纯函数式</a>语言。</p>
+<p>本文主要介绍 Haskell 的语法，并不会对函数式或 Haskell 的特性进行说明。如果曾经了解过函数式语言，本文可以作为语法简介来读。如果从未接触过函数式，那么你需要<strong>熟悉至少一门语言</strong>，并辅以适量的<a href="https://www.hackerrank.com/domains/fp/intro">习题</a>才可能入门。</p>
 
 
 <div class="toc">
@@ -695,7 +695,7 @@ Foo Bar
 
 <p>注意，模式匹配中的 <code>_</code> 能匹配任何值。</p>
 <h3 id="partial-application">Partial application（偏函数）</h3>
-<p>Haskell 中的所有函数都是 <strong>单参函数</strong>。多参函数本质上是对单参函数的多次求值，例如：</p>
+<p>Haskell 中的所有函数都是<strong>单参函数</strong>。多参函数本质上是对单参函数的多次求值，例如：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -766,7 +766,7 @@ mod :: Integral a =&gt; a -&gt; a -&gt; a
 </pre></div>
 </td></tr></table>
 
-<p>不难发现，<code>::</code> 前面是表达式，后面是表达式的类型说明，并且 <em>类型都以大写字母开头</em>。其中，<code>=&gt;</code> 叫 <em>类约束（class constraint）</em>，用来指明类型属于哪些 typeclass，<code>a</code>、<code>b</code>、<code>c</code>等出现在类型说明中的小写字母叫 <em>类型变量（type variable）</em>。我们看个例子：</p>
+<p>不难发现，<code>::</code> 前面是表达式，后面是表达式的类型说明，并且<em>类型都以大写字母开头</em>。其中，<code>=&gt;</code> 叫<em>类约束</em>（class constraint），用来指明类型属于哪些 typeclass，<code>a</code>、<code>b</code>、<code>c</code>等出现在类型说明中的小写字母叫<em>类型变量</em>（type variable）。我们看个例子：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nf">mod</span> <span class="ow">::</span> <span class="kt">Integral</span> <span class="n">a</span> <span class="ow">=&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="n">a</span>
 </pre></div>
 </td></tr></table>
@@ -783,7 +783,7 @@ mod :: Integral a =&gt; a -&gt; a -&gt; a
 <li><code>()</code>: 空元组</li>
 <li><code>Ordering</code>: 取值为 <code>GT</code>、<code>LT</code> 或 <code>EQ</code>，分别是 <code>greater than</code>、<code>lesser than</code> 和 <code>equal</code> 的缩写</li>
 </ul>
-<p>与 C 和 Java 等语言不一样，Haskell 是具有 <em>类型推断</em> 的 <strong>强</strong> 静态类型语言。这意味着：</p>
+<p>与 C 和 Java 等语言不一样，Haskell 是具有<em>类型推断</em>的<strong>强</strong>静态类型语言。这意味着：</p>
 <ul>
 <li>Haskell 会自动推断表达式或函数的类型，所以在定义函数的时候不需要声明类型</li>
 <li><strong>不会自动进行类型转换</strong>。因此 <code>Int</code> 和 <code>Double</code> 不能直接进行运算，比如：</li>
@@ -805,7 +805,7 @@ mod :: Integral a =&gt; a -&gt; a -&gt; a
 </td></tr></table>
 
 <h3 id="typeclass_1">Typeclass (类型类)</h3>
-<p>Typeclass 与常常出现在面向对象中的 <em>接口</em> 类似。常见 typeclass 如下：</p>
+<p>Typeclass 与常常出现在面向对象中的<em>接口</em>类似。常见 typeclass 如下：</p>
 <ul>
 <li><code>Num</code>: 数字</li>
 <li><code>Integral</code>: 整型数</li>

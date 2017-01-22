@@ -30,14 +30,14 @@
 <meta name="theme-color" content="#ffffff">
 <meta name="author" content="loggerhead" />    <meta name="keywords" content="量子加密,加密算法" />
 
-  <meta name="description" content="量子加密号称「绝对安全」绝不是哗众取宠，为什么这样说呢？因为与传统加密算法不同，量子加密的 原理基于物理定律，而不是特定数学问题的计算复杂性。因此，无论计算机的运算能力怎么增强，也丝毫不影响量子加密的安全性。本文以 BB84 协议来介绍量子加密，下文为了方便不对量子加密和 BB84 协议进行区分。" />
+  <meta name="description" content="量子加密号称「绝对安全」绝不是哗众取宠，为什么这样说呢？因为与传统加密算法不同，量子加密的原理基于物理定律，而不是特定数学问题的计算复杂性。因此，无论计算机的运算能力怎么增强，也丝毫不影响量子加密的安全性。本文以 BB84 协议来介绍量子加密，下文为了方便不对量子加密和 BB84 协议进行区分。" />
 
   <title>  绝对安全的量子加密
 </title>
 
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.1cd8932.css">
+  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.b04efe5.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -126,7 +126,7 @@
 </footer>        <hr>
       </header>
       <div class="entry-content">
-        <p><a href="https://zh.wikipedia.org/wiki/量子密碼學">量子加密</a>号称「绝对安全」绝不是哗众取宠，为什么这样说呢？因为与传统加密算法不同，量子加密的 <strong>原理基于物理定律</strong>，而不是特定数学问题的计算复杂性。因此，无论计算机的运算能力怎么增强，也丝毫不影响量子加密的安全性。本文以 <a href="https://zh.wikipedia.org/wiki/量子密碼學#BB84.E5.8D.8F.E8.AE.AE">BB84 协议</a>来介绍量子加密，下文为了方便不对量子加密和 BB84 协议进行区分。</p>
+        <p><a href="https://zh.wikipedia.org/wiki/量子密碼學">量子加密</a>号称「绝对安全」绝不是哗众取宠，为什么这样说呢？因为与传统加密算法不同，量子加密的<strong>原理基于物理定律</strong>，而不是特定数学问题的计算复杂性。因此，无论计算机的运算能力怎么增强，也丝毫不影响量子加密的安全性。本文以 <a href="https://zh.wikipedia.org/wiki/量子密碼學#BB84.E5.8D.8F.E8.AE.AE">BB84 协议</a>来介绍量子加密，下文为了方便不对量子加密和 BB84 协议进行区分。</p>
 
 
 <div class="toc">
@@ -219,7 +219,7 @@
 <p>唯一特殊的地方在于 <code>+(↖)</code> 和 <code>+(↗)</code> 是从 ↖ 或 ↗ 中随机挑一个作为运算结果，即产生 <code>+(↖)=↖</code> 或 <code>+(↖)=↗</code> 的可能性一样大，都为 <span class="math">\frac{1}{2}</span>。注意，这里的随机 <em>不是传统计算机中的伪随机，而是真随机</em>。</p>
 <h2 id="_3">生成密钥</h2>
 <p>假设 Alice 和 Bob 要进行通信，整个加密过程如下图所示。</p>
-<p><img alt="Quantum Cryptography" src="https://dn-loggerhead.qbox.me/images/quantum_cryptography.png" /></p>
+<p><img alt="Quantum Cryptography" src="https://cdn.loggerhead.me/images/quantum_cryptography.png" /></p>
 <p>Alice 随机产生一个数（0 或 1），再随机选择一个函数 <code>+</code> 或 <code>×</code> 进行运算。比如：Alice 随机产生的第一个数为 1，随机选择的函数为 <code>+</code>，那么运算结果为 <code>+(1)=→</code>。此过程会重复多次，产生一系列 →、↑、↖ 或 ↗，随后 Alice 将这些运算结果传送给 Bob。</p>
 <table>
     <tbody>
@@ -261,10 +261,10 @@
 </table>
 
 <p>接下来，Bob 告诉 Alice 自己随机选择了哪些函数。Alice 将其与自己的选择做对比，然后告诉 Bob 是不是选得和她一样。Bob 收到 Alice 的回答后，找到那些和 Alice 相同的函数，将通过它们推断出的随机数作为加密用的密钥，也就是 <code>11100</code>。</p>
-<p><img alt="compare results" src="https://dn-loggerhead.qbox.me/images/alice_and_bob_compare_results.png" /></p>
+<p><img alt="compare results" src="https://cdn.loggerhead.me/images/alice_and_bob_compare_results.png" /></p>
 <h2 id="_4">量子加密</h2>
 <p>量子力学假设光子（光子是一种量子）有四种偏振方向：↑、→、↗ 和 ↖，它们都可以通过某种装置产生。而在经过直线基 <code>+</code> 或对角基 <code>×</code> 时，它们既有可能保持不变，也有可能随机变成一种偏振方向。比如：偏振光子 → 的在经过直线基 <code>+</code> 时保持不变，还是 →，而在经过对角基 <code>×</code> 后则随机的变成了 ↗ 或 ↖。同时，基 <code>+</code> 和 <code>×</code> 也可以用来制备量子状态，比如：基 <code>+</code> 将比特 0 制备成 ↑，把比特 1 制备成 →。</p>
-<p><img alt="光的偏振" src="https://dn-loggerhead.qbox.me/images/光的偏振.png" /></p>
+<p><img alt="光的偏振" src="https://cdn.loggerhead.me/images/光的偏振.png" /></p>
 <p>稍加思考就会发现，上述理论不就是我们的<a href="#_2">前提与假设</a>吗？我们将之前提到的函数、运算等等全部替换成相应的物理过程，就得到了所谓的量子加密。</p>
 <h1 id="_5">为啥安全</h1>
 <p>相信看懂上述加密过程并不困难，那么为什么说量子加密绝对安全呢？我们首先得了解两个定律：</p>
@@ -274,7 +274,7 @@
 </ul>
 <h2 id="_6">中间人攻击</h2>
 <p>如果 Eve 想要窃听 Alice 发给 Bob 的光子，因为不可克隆定理，所以 Eve 只能查看 Alice 发给 Bob 的光子，而无法复制一个进行查看。同时，因为不确定性原理，并且由于 Eve 不知道 Alice 选择的测量基（只有 Alice 自己知道），所以 Eve 只能像 Bob 那样随机选择基进行测量。那么就有 <span class="math">\frac{1}{2}</span> 的概率改变光子的状态。例如：Eve 用基 <code>×</code> 测量偏振光子 ↑ 后，偏振方向变成了 ↖。</p>
-<p><img alt="Eve eavesdrop photon" src="https://dn-loggerhead.qbox.me/images/eavesdrop_photon.png" /></p>
+<p><img alt="Eve eavesdrop photon" src="https://cdn.loggerhead.me/images/eavesdrop_photon.png" /></p>
 <p>因为单个光子几乎没有包含任何有用信息，所以如果 Eve 想要窃听 Alice 与 Bob 的通信，势必会测量多个光子。假设 Eve 窃听过程中光子的变化如下表所示：</p>
 <table>
     <tbody>

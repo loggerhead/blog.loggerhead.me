@@ -30,14 +30,14 @@
 <meta name="theme-color" content="#ffffff">
 <meta name="author" content="loggerhead" />    <meta name="keywords" content="Erlang,编程语言" />
 
-  <meta name="description" content="在很多语言中，我们都能看到 函数式范型、动态类型、类型系统 的身影，而 Erlang 在此基础上发展出了一些自成一派的特点： 轻量级进程。Erlang 的进程既不是操作系统层面的进程，也不是线程，而是由 Erlang 虚拟机进行管理调度的无状态的进程。建立一个进程的成本非常低，在博主机器上（2.4 GHz Intel Core i5，8 GB 1600 MHz DDR3）平均只需要 2~4 us，而建立 80 万个进程也只花费了几秒的时间，并且据官方说法，建立一个进程的内存占用不到 400 字。 消..." />
+  <meta name="description" content="在很多语言中，我们都能看到函数式范型、动态类型、类型系统的身影，而 Erlang 在此基础上发展出了一些自成一派的特点： 轻量级进程。Erlang 的进程既不是操作系统层面的进程，也不是线程，而是由 Erlang 虚拟机进行管理调度的无状态的进程。建立一个进程的成本非常低，在博主机器上（2.4 GHz Intel Core i5，8 GB 1600 MHz DDR3）平均只需要 2~4 us，而建立 80 万个进程也只花费了几秒的时间，并且据官方说法，建立一个进程的内存占用不到 400 字。 消息原..." />
 
   <title>  Erlang 快速入门
 </title>
 
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.1cd8932.css">
+  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.b04efe5.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -126,7 +126,7 @@
 </footer>        <hr>
       </header>
       <div class="entry-content">
-        <p>在很多语言中，我们都能看到 <strong>函数式范型</strong>、<strong>动态类型</strong>、<strong>类型系统</strong> 的身影，而 Erlang 在此基础上发展出了一些自成一派的特点：</p>
+        <p>在很多语言中，我们都能看到<strong>函数式范型</strong>、<strong>动态类型</strong>、<strong>类型系统</strong>的身影，而 Erlang 在此基础上发展出了一些自成一派的特点：</p>
 <ul>
 <li><strong>轻量级进程</strong>。Erlang 的进程既不是操作系统层面的进程，也不是线程，而是由 Erlang 虚拟机进行管理调度的无状态的进程。建立一个进程的成本非常低，在博主机器上（2.4 GHz Intel Core i5，8 GB 1600 MHz DDR3）平均只需要 2~4 us，而建立 80 万个进程也只花费了几秒的时间，并且据官方说法，建立一个进程的内存占用不到 400 字。</li>
 <li><strong>消息原语</strong>。Erlang 直接在语言层面支持进程间通讯，并且在内部对并发进行了同步处理，用户不需要再关心多进程并发会不会发生同步问题，大大降低了在进程间传递消息的难度。例如，一句话就能搞定发消息：<code>Pid ! Message.</code>，收消息也就多个匹配和处理的过程：<code>receive Message -&gt; handle(Message) end.</code>。</li>
@@ -472,7 +472,7 @@ erl -man lists
 
 <p>详见 <a href="http://www.erlang.org/documentation/doc-5.6/doc/programming_examples/bit_syntax.html">bit syntax</a>。</p>
 <h2 id="_15">模块</h2>
-<p><a href="http://erlang.org/doc/reference_manual/modules.html">模块</a>必须存储在后缀为 <code>.erl</code> 的文件中，且 <strong>只能由模块属性和函数定义组成</strong>，下面以 <code>test.erl</code> 为例说明如何使用模块。</p>
+<p><a href="http://erlang.org/doc/reference_manual/modules.html">模块</a>必须存储在后缀为 <code>.erl</code> 的文件中，且<strong>只能由模块属性和函数定义组成</strong>，下面以 <code>test.erl</code> 为例说明如何使用模块。</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -497,7 +497,7 @@ erl -man lists
 <p><a href="http://erlang.org/doc/man/code.html">模块在第一次引用时被自动加载</a>，所以在调用模块中的函数时，不需要运行 <code>import</code> 之类的语句（python 就需要）。<sup id="fnref:module_load"><a class="footnote-ref" href="#fn:module_load" rel="footnote">2</a></sup></p>
 <h2 id="_16">函数</h2>
 <h3 id="_17">匿名函数</h3>
-<p>表达式 <code>fun(X) -&gt; Expression end.</code> 返回 <em>函数</em> 作为表达式的值。</p>
+<p>表达式 <code>fun(X) -&gt; Expression end.</code> 返回<em>函数</em>作为表达式的值。</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -603,7 +603,7 @@ erl -man lists
 </pre></div>
 </td></tr></table>
 
-<p>所以 Erlang 有 guard（断言）。Guard 以 <code>when</code> 关键字开头，可出现在 <strong>函数头部</strong> 或 <strong>表达式</strong> 中。</p>
+<p>所以 Erlang 有 guard（断言）。Guard 以 <code>when</code> 关键字开头，可出现在<strong>函数头部</strong>或<strong>表达式</strong>中。</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nf">is_adult</span><span class="p">(</span><span class="nv">Age</span><span class="p">)</span> <span class="k">when</span> <span class="nv">Age</span> <span class="o">&lt;</span> <span class="mi">18</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
 <span class="nf">is_adult</span><span class="p">(_)</span> <span class="o">-&gt;</span> <span class="n">true</span><span class="p">.</span>
@@ -1192,7 +1192,7 @@ erl -man lists
 <p><a href="http://erlang.org/doc/reference_manual/code_loading.html">Compilation and Code Loading</a>&#160;<a class="footnote-backref" href="#fnref:code_loading" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 <li id="fn:module_load">
-<p>实际上还得分 <strong>嵌入式</strong> 和 <strong>交互式</strong> 两种运行模式来讨论。前者在启动时一次加载完所有的代码，后者在启动时加载一部分基本的模块，其他模块则在第一次引用时动态加载。&#160;<a class="footnote-backref" href="#fnref:module_load" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+<p>实际上还得分<strong>嵌入式</strong>和<strong>交互式</strong>两种运行模式来讨论。前者在启动时一次加载完所有的代码，后者在启动时加载一部分基本的模块，其他模块则在第一次引用时动态加载。&#160;<a class="footnote-backref" href="#fnref:module_load" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 <li id="fn:conc_prog">
 <p>详见官方文档 <a href="http://www.erlang.org/doc/getting_started/conc_prog.html">Concurrent Programming</a>&#160;<a class="footnote-backref" href="#fnref:conc_prog" rev="footnote" title="Jump back to footnote 3 in the text">&#8617;</a></p>

@@ -37,7 +37,7 @@
 
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.1cd8932.css">
+  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.b04efe5.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -154,13 +154,13 @@
 </div>
 <h1 id="ip">IP 地址的组织形式</h1>
 <h2 id="ip_1">IP 地址的表示</h2>
-<p>IP 地址实际上是 32 bit 的数字（也就是4字节），不过由于二进制的可读性太差，所以计算机网络沿用了信息技术中的表示法，将 IP 地址按 8 bit 分成4组，每组用一个十进制数字来表示，数字之间用点做分隔，也就是所谓的 <em>点分十进制</em>。</p>
-<p><img alt="dotted-decimal notation" src="https://dn-loggerhead.qbox.me/images/dotted-decimal_notation.png" /></p>
+<p>IP 地址实际上是 32 bit 的数字（也就是4字节），不过由于二进制的可读性太差，所以计算机网络沿用了信息技术中的表示法，将 IP 地址按 8 bit 分成4组，每组用一个十进制数字来表示，数字之间用点做分隔，也就是所谓的<em>点分十进制</em>。</p>
+<p><img alt="dotted-decimal notation" src="https://cdn.loggerhead.me/images/dotted-decimal_notation.png" /></p>
 <p>比如，从上图可以看出 IP 地址 <code>172.16.254.1</code> 对应于二进制 <code>10101100 00010000 11111110 00000001</code>。</p>
 <p>因为计算机只能识别二进制，所以编程时需要将点分十进制转换成计算机可识别的二进制，这也就是为什么 Linux/Unix 需要 <code>inet_aton</code> <code>inet_addr</code> <code>inet_ntoa</code> 这三个函数进行 IP 地址的转换。</p>
 <h2 id="ip_2">五类 IP 地址</h2>
 <p>虽说 IP 地址实际上是二进制数字，但它并不是像 <code>0.0.0.0</code>、<code>0.0.0.1</code>、<code>0.0.0.2</code> ... 这样构造的，而是被划分为 ABCDE 五类。那么为什么要划分呢？主要是为了分配、识别和管理的方便<sup id="fnref:alloc"><a class="footnote-ref" href="#fn:alloc" rel="footnote">1</a></sup>。比如：你看到 <code>3.xxx.xxx.xxx</code> 马上就能知道，这是 A 类地址，拥有这个地址的肯定是个大型机构（类似 <code>省.市.区.家</code>）。</p>
-<p><img alt="five classes of IP" src="https://dn-loggerhead.qbox.me/images/five_classes_of_IP.png" /></p>
+<p><img alt="five classes of IP" src="https://cdn.loggerhead.me/images/five_classes_of_IP.png" /></p>
 <table>
 <thead>
 <tr>
@@ -202,7 +202,7 @@
 <p>因为广播和路由<sup id="fnref:Subnet_reason"><a class="footnote-ref" href="#fn:Subnet_reason" rel="footnote">3</a></sup>的存在，需要将 IP 地址划分成不同的网段（试想全地球的人都呆在一个大房子里面会是多么不方便？），例如：ABC 类中的网络 ID 就指明了 IP 所在的网段。有时候为了<del>联机玩魔兽</del>方便的处理多个主机，我们需要将它们放到一个网段下，而且希望能够与其他主机隔离，这时候就可以通过设置子网掩码将固定网段进一步划分。</p>
 <p>比如：C 类地址 <code>192.168.137.1</code>，子网掩码 <code>255.255.255.240</code> 就表示它位于 <code>192.168.137.0 - 192.168.137.15</code> 网段内，也就是同一个局域网下。</p>
 <p>子网掩码长得很像 IP 地址，它实际上也是二进制数字，例如：<code>255.255.255.240</code> 对应 <code>11111111 11111111 11111111 11110000</code>。计算机最擅长做的是什么？二进制的运算。所以判断 IP 地址是不是位于某个网段是通过将 IP 地址与子网掩码做逻辑与来判断的。<sup id="fnref:Subnet_Mask"><a class="footnote-ref" href="#fn:Subnet_Mask" rel="footnote">4</a></sup></p>
-<p><img alt="subnet calculattion" src="https://dn-loggerhead.qbox.me/images/subnet_calculattion.png" /></p>
+<p><img alt="subnet calculattion" src="https://cdn.loggerhead.me/images/subnet_calculattion.png" /></p>
 <p>子网掩码可以是任意的 32 bits 数字，但是实际中无一例外是以全1开头全0结束。</p>
 <p>相比使用 IP 地址和子网掩码表示网段，CIDR（Classless Inter-Domain Routing）表示法更为方便，可读性也更高。前面的例子用 CIDR 表示为 <code>192.168.137.0/28</code>。CIDR 表示法由三部分组成：IP 地址、斜杠、掩码前缀1的个数。网段的计算方法和子网掩码方式等价，除了斜杠后的数字表示子网掩码1开头的位数以外，并无区别。看下面这个例子就明白了。</p>
 <table>

@@ -34,7 +34,7 @@
 
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.1cd8932.css">
+  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.b04efe5.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -94,6 +94,40 @@
   <div class="row">
     <div class="col-md-12">
       <div class="markdown-body article-list">
+      <article>
+        <header class="page-header">
+          <h2><a class="article-title" href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-chao-shi-chu-li.html">Shadowsocks 源码分析——超时处理</a></h2>
+<footer class="post-info">
+  <div class="row">
+    <div class="col-xs-8">
+      <!-- <span class="label label-default">Tags</span> -->
+        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/yuan-ma-fen-xi.html">
+          源码分析
+        </a>
+        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/python.html">
+          Python
+        </a>
+    </div>
+
+    <div class="col-xs-4 time">
+      <time class="pull-right" datetime="2017-01-20T10:00:00+08:00">
+        2017-01-20
+      </time>
+    </div>
+  </div>
+</footer>        </header>
+        <div class="sep"></div>
+        <div class="summary">
+          <p>Shadowsocks 是一款性能很不错的代理工具，它的高性能体现在两个方面：速度快、资源占用少。相信你在读完「<a href="/posts/shadowsocks-yuan-ma-fen-xi-xie-yi-yu-jie-gou.html">协议与结构</a>」和「<a href="/posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html">TCP 代理</a>」这两篇文章后，就能理解为什么 shadowsocks 的速度快了<sup id="fnref:not-understand"><a class="footnote-ref" href="#fn:not-understand" rel="footnote">1</a></sup>。资源占用少主要是因为 shadowsocks 使用了事件循环而不是多线程，另一方面，及时的进行超时和异常处理，能够将空闲的资源回收再利用也是原因之一。本文基于 <a href="https://github.com/loggerhead/shadowsocks/tree/8e8ee5d490ce319b8db9b61001dac51a7da4be63">2.9.0 版本的源码</a>介绍 <code>tcprelay.py</code> 如何进行超时处理。</p>
+
+        </div>
+        <div>
+          <a class="btn btn-default btn-sm" href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-chao-shi-chu-li.html">
+              查看全文
+          </a>
+        </div>
+      </article>
+      <hr>
       <article>
         <header class="page-header">
           <h2><a class="article-title" href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html">Shadowsocks 源码分析——TCP 代理</a></h2>

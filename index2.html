@@ -35,7 +35,7 @@
 
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.1cd8932.css">
+  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.b04efe5.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -97,6 +97,43 @@
       <div class="markdown-body article-list">
       <article>
         <header class="page-header">
+          <h2><a class="article-title" href="https://loggerhead.me/posts/erlang-he-bian-ma-feng-ge-dui-da-duo-shu-fang-yu-xing-bian-ma-feng-ge-de-si-kao.html">Erlang 和编码风格--对大多数防御性编码风格的思考</a></h2>
+<footer class="post-info">
+  <div class="row">
+    <div class="col-xs-8">
+      <!-- <span class="label label-default">Tags</span> -->
+        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/fan-yi.html">
+          翻译
+        </a>
+        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/erlang.html">
+          Erlang
+        </a>
+        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/bian-cheng-yu-yan.html">
+          编程语言
+        </a>
+    </div>
+
+    <div class="col-xs-4 time">
+      <time class="pull-right" datetime="2015-09-20T12:09:00+08:00">
+        2015-09-20
+      </time>
+    </div>
+  </div>
+</footer>        </header>
+        <div class="sep"></div>
+        <div class="summary">
+          <p>原文：<a href="https://medium.com/@jlouis666/erlang-and-code-style-b5936dceb5e4">Erlang and code style--Musings on mostly defensive programming styles</a></p>
+
+        </div>
+        <div>
+          <a class="btn btn-default btn-sm" href="https://loggerhead.me/posts/erlang-he-bian-ma-feng-ge-dui-da-duo-shu-fang-yu-xing-bian-ma-feng-ge-de-si-kao.html">
+              查看全文
+          </a>
+        </div>
+      </article>
+      <hr>
+      <article>
+        <header class="page-header">
           <h2><a class="article-title" href="https://loggerhead.me/posts/gist-ssh-timeout-yuan-yin.html">Gist SSH Timeout 原因</a></h2>
 <footer class="post-info">
   <div class="row">
@@ -153,7 +190,7 @@
 </footer>        </header>
         <div class="sep"></div>
         <div class="summary">
-          <p>在很多语言中，我们都能看到 <strong>函数式范型</strong>、<strong>动态类型</strong>、<strong>类型系统</strong> 的身影，而 Erlang 在此基础上发展出了一些自成一派的特点：</p>
+          <p>在很多语言中，我们都能看到<strong>函数式范型</strong>、<strong>动态类型</strong>、<strong>类型系统</strong>的身影，而 Erlang 在此基础上发展出了一些自成一派的特点：</p>
 <ul>
 <li><strong>轻量级进程</strong>。Erlang 的进程既不是操作系统层面的进程，也不是线程，而是由 Erlang 虚拟机进行管理调度的无状态的进程。建立一个进程的成本非常低，在博主机器上（2.4 GHz Intel Core i5，8 GB 1600 MHz DDR3）平均只需要 2~4 us，而建立 80 万个进程也只花费了几秒的时间，并且据官方说法，建立一个进程的内存占用不到 400 字。</li>
 <li><strong>消息原语</strong>。Erlang 直接在语言层面支持进程间通讯，并且在内部对并发进行了同步处理，用户不需要再关心多进程并发会不会发生同步问题，大大降低了在进程间传递消息的难度。例如，一句话就能搞定发消息：<code>Pid ! Message.</code>，收消息也就多个匹配和处理的过程：<code>receive Message -&gt; handle(Message) end.</code>。</li>
@@ -417,44 +454,6 @@ Standard)</a> 的高级加密标准。而 Rijndael 算法是被 NIST 认为符�
         </div>
         <div>
           <a class="btn btn-default btn-sm" href="https://loggerhead.me/posts/java-tong-shi-chu-shi-hua-liang-ge-lei.html">
-              查看全文
-          </a>
-        </div>
-      </article>
-      <hr>
-      <article>
-        <header class="page-header">
-          <h2><a class="article-title" href="https://loggerhead.me/posts/java-nei-bu-lei-yong-fa-xiao-jie.html">Java 内部类用法小结</a></h2>
-<footer class="post-info">
-  <div class="row">
-    <div class="col-xs-8">
-      <!-- <span class="label label-default">Tags</span> -->
-        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/java.html">
-          Java
-        </a>
-    </div>
-
-    <div class="col-xs-4 time">
-      <time class="pull-right" datetime="2012-07-31T16:20:00+08:00">
-        2012-07-31
-      </time>
-    </div>
-  </div>
-</footer>        </header>
-        <div class="sep"></div>
-        <div class="summary">
-          <h2 id="_1">定义</h2>
-<p>顾名思义，创建于外部类之内的类。可以定义于外部类的方法内。下面用I类表内部类，O类表外部类。（I：inner，O：outer）</p>
-<h2 id="_2">用途</h2>
-<ol>
-<li>private修饰的内部类用来隐藏实现的细节</li>
-<li>匿名类使方法实现更简洁、优美（例：工厂方法，适配器方法）</li>
-<li>可用于有效的实现“多重继承”</li>
-</ol>
-
-        </div>
-        <div>
-          <a class="btn btn-default btn-sm" href="https://loggerhead.me/posts/java-nei-bu-lei-yong-fa-xiao-jie.html">
               查看全文
           </a>
         </div>

@@ -35,7 +35,7 @@
 
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.1cd8932.css">
+  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.b04efe5.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -97,6 +97,40 @@
       <div class="markdown-body article-list">
       <article>
         <header class="page-header">
+          <h2><a class="article-title" href="https://loggerhead.me/posts/gist-ssh-timeout-yuan-yin.html">Gist SSH Timeout 原因</a></h2>
+<footer class="post-info">
+  <div class="row">
+    <div class="col-xs-8">
+      <!-- <span class="label label-default">Tags</span> -->
+        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/github.html">
+          Github
+        </a>
+        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/non-tech.html">
+          non-tech
+        </a>
+    </div>
+
+    <div class="col-xs-4 time">
+      <time class="pull-right" datetime="2015-09-17T22:28:06+08:00">
+        2015-09-17
+      </time>
+    </div>
+  </div>
+</footer>        </header>
+        <div class="sep"></div>
+        <div class="summary">
+          <p>最近 clone gist 的时候总是 timeout，Google 了一番，在 ssh 上找了半天原因后发现是因为 <strong>GFW 把 Gist 给墙了</strong>。</p>
+
+        </div>
+        <div>
+          <a class="btn btn-default btn-sm" href="https://loggerhead.me/posts/gist-ssh-timeout-yuan-yin.html">
+              查看全文
+          </a>
+        </div>
+      </article>
+      <hr>
+      <article>
+        <header class="page-header">
           <h2><a class="article-title" href="https://loggerhead.me/posts/erlang-kuai-su-ru-men.html">Erlang 快速入门</a></h2>
 <footer class="post-info">
   <div class="row">
@@ -119,7 +153,7 @@
 </footer>        </header>
         <div class="sep"></div>
         <div class="summary">
-          <p>在很多语言中，我们都能看到 <strong>函数式范型</strong>、<strong>动态类型</strong>、<strong>类型系统</strong> 的身影，而 Erlang 在此基础上发展出了一些自成一派的特点：</p>
+          <p>在很多语言中，我们都能看到<strong>函数式范型</strong>、<strong>动态类型</strong>、<strong>类型系统</strong>的身影，而 Erlang 在此基础上发展出了一些自成一派的特点：</p>
 <ul>
 <li><strong>轻量级进程</strong>。Erlang 的进程既不是操作系统层面的进程，也不是线程，而是由 Erlang 虚拟机进行管理调度的无状态的进程。建立一个进程的成本非常低，在博主机器上（2.4 GHz Intel Core i5，8 GB 1600 MHz DDR3）平均只需要 2~4 us，而建立 80 万个进程也只花费了几秒的时间，并且据官方说法，建立一个进程的内存占用不到 400 字。</li>
 <li><strong>消息原语</strong>。Erlang 直接在语言层面支持进程间通讯，并且在内部对并发进行了同步处理，用户不需要再关心多进程并发会不会发生同步问题，大大降低了在进程间传递消息的难度。例如，一句话就能搞定发消息：<code>Pid ! Message.</code>，收消息也就多个匹配和处理的过程：<code>receive Message -&gt; handle(Message) end.</code>。</li>

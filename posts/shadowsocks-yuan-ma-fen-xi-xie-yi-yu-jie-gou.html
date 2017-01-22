@@ -37,7 +37,7 @@
 
 <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.1cd8932.css">
+  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.b04efe5.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
@@ -196,14 +196,14 @@ ss -&gt; client: 0x05 0x00
 </pre></div>
 </td></tr></table>
 
-<p>如果客户端 <strong>还支持</strong> 用户名/密码的认证方式，那么握手会是这样子：</p>
+<p>如果客户端<strong>还</strong>支持用户名/密码的认证方式，那么握手会是这样子：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2</pre></div></td><td class="code"><div class="highlight"><pre><span></span>client -&gt; ss: 0x05 0x02 0x00 0x02
 ss -&gt; client: 0x05 0x00
 </pre></div>
 </td></tr></table>
 
-<p>如果客户端 <strong>只支持</strong> 用户名/密码的认证方式，那么握手会是这样子：</p>
+<p>如果客户端<strong>只</strong>支持用户名/密码的认证方式，那么握手会是这样子：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2</pre></div></td><td class="code"><div class="highlight"><pre><span></span>client -&gt; ss: 0x05 0x01 0x02
 ss -&gt; client: 0x05 0xff
@@ -243,7 +243,7 @@ ss -&gt; client: 0x05 0xff
 <li><code>ATYP == 0x04</code>：16 个字节的 IPv6 地址</li>
 </ul>
 </li>
-<li><code>DST.PORT</code> 字段：目的服务器的端口</li>
+<li><code>DST.PORT</code> 字段：目的服务器的端口。</li>
 </ul>
 <p>在收到客户端的请求后，服务器会返回如下格式的消息：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
@@ -276,7 +276,7 @@ ss -&gt; client: 0x05 0x00 0x00 0x01 0x00 0x00 0x00 0x00 0x10 0x10
 <p>这里 <code>0x7f 0x00 0x00 0x01 0x1f 0x40</code> 对应的是 <code>127.0.0.1:8000</code>。需要注意的是，当请求中的 <code>CMD == 0x01</code> 时，绝大部分 SOCKS5 客户端的实现都会忽略 SOCKS5 服务器返回的 <code>BND.ADDR</code> 和 <code>BND.PORT</code> 字段，所以这里的 <code>0x00 0x00 0x00 0x00 0x10 0x10</code> 只是 shadowsocks 返回的一个无意义的地址和端口<sup id="fnref:bnd.addr"><a class="footnote-ref" href="#fn:bnd.addr" rel="footnote">1</a></sup>。</p>
 <h2 id="_3">传输阶段</h2>
 <p>SOCKS5 协议只负责建立连接，在完成握手阶段和建立连接之后，SOCKS5 服务器就只做简单的转发了。假如客户端通过 shadowsocks 代理 <code>google.com:80</code>（用 <code>remote</code> 表示），那么整个过程如图所示：</p>
-<p><img alt="socks example" src="https://dn-loggerhead.qbox.me/images/socks5-example.svg" /></p>
+<p><img alt="socks example" src="https://cdn.loggerhead.me/images/socks5-example.svg" /></p>
 <p>整个过程中发生的传输可能是这样的：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -373,9 +373,9 @@ remote -&gt; ss -&gt; client
 </td></tr></table>
 
 <p>有一点需要提一下：<strong>代理和能翻墙的代理是不一样的</strong>。比如，下图是普通的 SOCKS5 代理：</p>
-<p><img alt="normal-proxy" src="https://dn-loggerhead.qbox.me/images/normal-proxy.svg" /></p>
+<p><img alt="normal-proxy" src="https://cdn.loggerhead.me/images/normal-proxy.svg" /></p>
 <p>而能翻墙的 SOCKS5 代理是下图这种结构：</p>
-<p><img alt="ss-proxy" src="https://dn-loggerhead.qbox.me/images/ss-proxy.svg" /></p>
+<p><img alt="ss-proxy" src="https://cdn.loggerhead.me/images/ss-proxy.svg" /></p>
 <p>可以看出来，SOCKS5 服务器的实现被拆分成了两部分：</p>
 <ul>
 <li>sslocal 负责与 SOCKS5 客户端进行 SOCKS5 协议相关的通讯（握手并建立连接），在建立连接后将 SOCKS5 客户端发来的数据加密并发送给 ssserver；</li>
@@ -464,11 +464,11 @@ remote -&gt; ss -&gt; client
 </pre></div>
 </td></tr></table>
 
-<p><code>run</code> 是一个典型的事件循环，它会阻塞在第 8 行等待注册事件的发生，然后通过事件对应的文件描述符 <code>fd</code> 找到 <code>handler</code>，调用 <code>handler.handle_event(sock, fd, event)</code> 来将事件交由 <code>handler</code> 处理，同时每隔 10 秒调用 <code>TCPRelay</code>、<code>UDPRelay</code> 或 <code>DNSResolver</code> 的 <code>handle_periodic</code> 函数处理超时或清除缓存。</p>
+<p><code>run</code> 是一个典型的事件循环，它会阻塞在第 8 行等待注册事件的发生，然后通过事件对应的文件描述符 <code>fd</code> 找到 <code>handler</code>，调用 <code>handler.handle_event(sock, fd, event)</code> 来将事件交由 <code>handler</code> 处理，同时每隔 <code>TIMEOUT_PRECISION</code> 秒调用 <code>TCPRelay</code>、<code>UDPRelay</code> 或 <code>DNSResolver</code> 的 <code>handle_periodic</code> 函数处理超时或清除缓存。</p>
 <p>比如：如果客户端连接到 sslocal，第 8 行会返回可读事件，第 30 行会调用 <code>TCPRelay</code> 的 <code>handle_event</code> 来处理，<code>handle_event</code> 发现这是一个可读事件，会调用 <code>accept</code> 建立新连接。</p>
 <h2 id="tcprelaypy">tcprelay.py</h2>
-<p>Shadowsocks 采用了反应器模式（<a href="https://en.wikipedia.org/wiki/Reactor_pattern">reactor pattern</a>）。以下图为例：</p>
-<p><img alt="ss-reactor-pattern" src="https://dn-loggerhead.qbox.me/images/ss-reactor-pattern.png" /></p>
+<p>Shadowsocks 采用了反应器模式（<a href="https://en.wikipedia.org/wiki/Reactor_pattern">reactor pattern</a>），如下图所示。</p>
+<p><img alt="ss-reactor-pattern" src="https://cdn.loggerhead.me/images/ss-reactor-pattern.png" /></p>
 <p><code>TCPRelayHandler</code> 的事件会由 <code>EventLoop</code> 分发给 <code>TCPRelay</code>，再经由 <code>TCPRelay</code> 将事件分发给相应的 <code>TCPRelayHandler</code> 处理。这个过程发生在 <code>EventLoop</code> 和 <code>TCPRelay</code> 的 <code>handle_event</code> 函数。</p>
 <p>我们去掉其中的日志处理和错误处理逻辑，看看 <code>handle_event</code> 函数：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
