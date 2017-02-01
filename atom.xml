@@ -1,5 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>loggerhead's blog</title><link href="https://loggerhead.me/" rel="alternate"></link><link href="https://loggerhead.me/atom.xml" rel="self"></link><id>https://loggerhead.me/</id><updated>2017-01-20T10:00:00+08:00</updated><entry><title>Shadowsocks 源码分析——超时处理</title><link href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-chao-shi-chu-li.html" rel="alternate"></link><published>2017-01-20T10:00:00+08:00</published><updated>2017-01-20T10:00:00+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2017-01-20:posts/shadowsocks-yuan-ma-fen-xi-chao-shi-chu-li.html</id><summary type="html">&lt;p&gt;Shadowsocks 是一款性能很不错的代理工具，它的高性能体现在两个方面：速度快、资源占用少。相信你在读完「&lt;a href="/posts/shadowsocks-yuan-ma-fen-xi-xie-yi-yu-jie-gou.html"&gt;协议与结构&lt;/a&gt;」和「&lt;a href="/posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html"&gt;TCP 代理&lt;/a&gt;」这两篇文章后，就能理解为什么 shadowsocks 的速度快了&lt;sup id="fnref:not-understand"&gt;&lt;a class="footnote-ref" href="#fn:not-understand" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;。资源占用少主要是因为 shadowsocks 使用了事件循环而不是多线程，另一方面，及时的进行超时和异常处理，能够将空闲的资源回收再利用也是原因之一。本文基于 &lt;a href="https://github.com/loggerhead/shadowsocks/tree/8e8ee5d490ce319b8db9b61001dac51a7da4be63"&gt;2.9.0 版本的源码&lt;/a&gt;介绍 &lt;code&gt;tcprelay.py&lt;/code&gt; 如何进行超时处理。&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>loggerhead's blog</title><link href="https://loggerhead.me/" rel="alternate"></link><link href="https://loggerhead.me/atom.xml" rel="self"></link><id>https://loggerhead.me/</id><updated>2017-02-01T00:08:20+08:00</updated><entry><title>2016 年终小结</title><link href="https://loggerhead.me/posts/2016-nian-zhong-xiao-jie.html" rel="alternate"></link><published>2017-02-01T00:08:20+08:00</published><updated>2017-02-01T00:08:20+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2017-02-01:posts/2016-nian-zhong-xiao-jie.html</id><summary type="html">&lt;p&gt;一年一度的年终小结又到了，今年似乎做了不少事情，又似乎没做什么，是时候写下来好好的审视一下了。&lt;/p&gt;
+
+
+&lt;h1 id="_1"&gt;技术上&lt;/h1&gt;
+&lt;p&gt;主要做了两个开源项目：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/loggerhead/Easy-Karabiner"&gt;Easy-Karabiner&lt;/a&gt;: &lt;a href="https://github.com/tekezo/Karabiner"&gt;Karabiner&lt;/a&gt; 是 macOS 上一款改键神器，几乎能实现任何形式的改键，而且内存和 CPU 占用都很少，但是它是通过 XML 进行配置，配置不难但是麻烦，维护十分蛋疼，每次要改什么都得去重新翻文档。基于此，Easy-Karabiner 诞生了，它读取写在 python 文件中的配置，将其导出成 XML，使得配置简化了不少；&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/loggerhead/shadowsocks-rust"&gt;shadowsocks-rust&lt;/a&gt;: &lt;a href="http://shadowsocks.org/"&gt;shadowsocks&lt;/a&gt; 是由 &lt;a href="https://github.com/clowwindy"&gt;clowwindy&lt;/a&gt; 实现的一款 SOCKS5 代理，速度快、占用资源少，shadowsocks-rust 是它的 rust 实现，实现了绝大部分功能，性能同样很好。造这个轮子的出发点是为了学习 rust，实现 shadowsocks 涉及到方方面面的知识，而且工程量适中，代码易懂，很适合用来练习编程语言。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;其次是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;学会了 &lt;a href="https://rust-lang.org/"&gt;Rust&lt;/a&gt;，加深了对类型系统和编程语言的理解；&lt;/li&gt;
+&lt;li&gt;完成了部分 JOS 的任务（由于考试的缘故中断了，后来就续不上了……），加深了对操作系统的理解，现在我能够读写简单的汇编了；&lt;/li&gt;
+&lt;li&gt;进一步完善了博客，并将其 docker 化了，现在几行命令就可以搭建起来了；&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;给各种各样的开源项目做出了贡献（提 issue 或 PR，PR 主要是修 bug……），献上我的贡献图：&lt;/p&gt;
+&lt;p&gt;&lt;img alt="github-2016-contribution.png" src="https://cdn.loggerhead.me/images/github-2016-contribution.png" /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;再就是在开普勒数据科技有限公司为期三个月的实习了：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;为合作的公司实现个性化推荐系统。我负责的模块是将发送来的数据序列化后存储到 HBase 中，同时根据各字段间的关系生成某些指标，由于数据量较大，这部分得考虑清楚用什么策略来做，否则可能出现数据源源不断的过来，系统却在“慢吞吞”的处理，导致未处理完的数据堆积得越来越多。另外，还要对接受到的 RPC 请求进行处理，然后响应结果给请求方，这部分就是普通的 RPC 服务器，只需要注意性能跟得上就行；&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;由于业务需要，得实现各种各样的爬虫。写爬虫是个体力活，也不是很难，我在实现这几个爬虫的时候，流程基本上是固定的：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;分析需要爬取的数据是怎么得到的，直接请求 HTML 是否有；&lt;/li&gt;
+&lt;li&gt;如果没有，试试看移动端的页面；&lt;/li&gt;
+&lt;li&gt;如果还是没有，抓包看有没有隐藏的接口可以用；&lt;/li&gt;
+&lt;li&gt;如果数据是通过 js 获取的，可能得考虑用 &lt;a href="https://en.wikipedia.org/wiki/Headless_browser"&gt;headless browser&lt;/a&gt;；&lt;/li&gt;
+&lt;li&gt;搞清数据来源后，用 &lt;a href="https://github.com/scrapy/scrapy"&gt;scrapy&lt;/a&gt; 之类的框架来做；&lt;/li&gt;
+&lt;li&gt;如果出现 &lt;code&gt;40x&lt;/code&gt; 了，可能是有限速或限 IP，那么就得在程序中限制请求频率或加代理。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;仔细想想，在完成自己的开源项目上花费了很多时间，比如：Easy-Karabiner 花了一两个月，shadowsocks-rust 花了三四个月。实际有 80% 的时间在完善 20% 的细节或琐事上，比如：新想出来一个点子，要实现；发现一个错误没处理，要搞定；文档没写清楚，要完善。每每做这些事情的时候都是「痛并快乐着」，一方面费时费力，却对整个项目只有很少的贡献；一方面就像打磨璞玉一样，看着它逐渐圆润的过程是很有成就感、很让人快乐的。&lt;/p&gt;
+&lt;h1 id="_2"&gt;生活上&lt;/h1&gt;
+&lt;p&gt;和恋爱近三年的女朋友分手了，有成长，也有伤感，意识到自己有一些以往没有注意到的问题，会注意到它们，尝试克服它们。发现自己的身体变得更差了，就连小小的感冒也会十分难受，为了改善这一点，开始参加实验室的运动，有规律的去健身房。&lt;/p&gt;
+&lt;h1 id="_3"&gt;接下来&lt;/h1&gt;
+&lt;p&gt;希望今年能完成下面这些「小目标」：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;看论文，写爬虫爬取毕设需要的数据，考虑毕设怎么做；&lt;/li&gt;
+&lt;li&gt;刷 &lt;a href="https://leetcode.com/problemset/algorithms/"&gt;leetcode&lt;/a&gt; 上的算法题，完成 medium 和 hard 难度的题；&lt;/li&gt;
+&lt;li&gt;坚持健身和胡吃海喝，超越 55 公斤；&lt;/li&gt;
+&lt;li&gt;练习英语，做到能像写中文一样写英文。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;实现下面两个开源项目中的一个：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;实现一个简单的 NoSQL 数据库，考虑用 Go、Rust 或 C 来做；&lt;/li&gt;
+&lt;li&gt;实现一个支持插件的代理，要做到：性能匹敌 shadowsocks、不依赖 OpenSSL、跨平台。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果还有时间：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;看完《&lt;a href="https://book.douban.com/subject/1148282/"&gt;计算机程序的构造和解释&lt;/a&gt;》；&lt;/li&gt;
+&lt;li&gt;完成程序员的三大浪漫中剩下的两个。&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="non-tech"></category></entry><entry><title>Shadowsocks 源码分析——超时处理</title><link href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-chao-shi-chu-li.html" rel="alternate"></link><published>2017-01-20T10:00:00+08:00</published><updated>2017-01-20T10:00:00+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2017-01-20:posts/shadowsocks-yuan-ma-fen-xi-chao-shi-chu-li.html</id><summary type="html">&lt;p&gt;Shadowsocks 是一款性能很不错的代理工具，它的高性能体现在两个方面：速度快、资源占用少。相信你在读完「&lt;a href="/posts/shadowsocks-yuan-ma-fen-xi-xie-yi-yu-jie-gou.html"&gt;协议与结构&lt;/a&gt;」和「&lt;a href="/posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html"&gt;TCP 代理&lt;/a&gt;」这两篇文章后，就能理解为什么 shadowsocks 的速度快了&lt;sup id="fnref:not-understand"&gt;&lt;a class="footnote-ref" href="#fn:not-understand" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;。资源占用少主要是因为 shadowsocks 使用了事件循环而不是多线程，另一方面，及时的进行超时和异常处理，能够将空闲的资源回收再利用也是原因之一。本文基于 &lt;a href="https://github.com/loggerhead/shadowsocks/tree/8e8ee5d490ce319b8db9b61001dac51a7da4be63"&gt;2.9.0 版本的源码&lt;/a&gt;介绍 &lt;code&gt;tcprelay.py&lt;/code&gt; 如何进行超时处理。&lt;/p&gt;
 
 
 &lt;div class="toc"&gt;

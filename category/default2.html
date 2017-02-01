@@ -97,6 +97,62 @@
       <div class="markdown-body article-list">
       <article>
         <header class="page-header">
+          <h2><a class="article-title" href="https://loggerhead.me/posts/haskell-kuai-su-ru-men.html">Haskell 快速入门</a></h2>
+<footer class="post-info">
+  <div class="row">
+    <div class="col-xs-8">
+      <!-- <span class="label label-default">Tags</span> -->
+        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/haskell.html">
+          Haskell
+        </a>
+        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/bian-cheng-yu-yan.html">
+          编程语言
+        </a>
+    </div>
+
+    <div class="col-xs-4 time">
+      <time class="pull-right" datetime="2015-10-01T21:35:00+08:00">
+        2015-10-01
+      </time>
+    </div>
+  </div>
+</footer>        </header>
+        <div class="sep"></div>
+        <div class="summary">
+          <p>当你开始接触函数式的时候，经常能看到 Haskell 的身影。那么 Haskell 究竟具有什么特点，让众多程序员为之倾倒？百闻不如一见，看几个例子你就懂了：</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">-- 从 1 到负无穷的列表</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="o">..</span><span class="p">]</span>                                        
+<span class="c1">-- 斐波那契数列</span>
+<span class="nf">fibs</span> <span class="ow">=</span> <span class="mi">0</span> <span class="kt">:</span> <span class="mi">1</span> <span class="kt">:</span> <span class="n">zipWith</span> <span class="p">(</span><span class="o">+</span><span class="p">)</span> <span class="n">fibs</span> <span class="p">(</span><span class="n">tail</span> <span class="n">fibs</span><span class="p">)</span>
+<span class="c1">-- 快速排序</span>
+<span class="nf">quicksort</span> <span class="kt">[]</span> <span class="ow">=</span> <span class="kt">[]</span>  
+<span class="nf">quicksort</span> <span class="p">(</span><span class="n">x</span><span class="kt">:</span><span class="n">xs</span><span class="p">)</span> <span class="ow">=</span> <span class="p">(</span><span class="n">quicksort</span> <span class="o">$</span> <span class="n">filter</span> <span class="p">(</span><span class="o">&lt;</span> <span class="n">x</span><span class="p">)</span> <span class="n">xs</span><span class="p">)</span> <span class="o">++</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">++</span> <span class="p">(</span><span class="n">quicksort</span> <span class="o">$</span> <span class="n">filter</span> <span class="p">(</span><span class="o">&gt;</span> <span class="n">x</span><span class="p">)</span> <span class="n">xs</span><span class="p">)</span>
+<span class="c1">-- 将 `*2` 和 `+3` 分别作用于列表</span>
+<span class="p">[(</span><span class="o">*</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="o">+</span><span class="mi">3</span><span class="p">)]</span> <span class="o">&lt;*&gt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>  <span class="c1">-- [2,4,6,4,5,6]</span>
+</pre></div>
+</td></tr></table>
+
+<p>通过这几个例子，可以看出 Haskell 表达能力极强。这是因为 Haskell 是一门支持<em>惰性求值</em>、<em>模式匹配</em>、<em>列表解析</em>、<em>类型类</em>和<em>类型推断</em>的<em>强静态类型</em> &amp;&amp; <a href="https://en.wikipedia.org/wiki/Functional_programming">纯函数式</a>语言。</p>
+<p>本文主要介绍 Haskell 的语法，并不会对函数式或 Haskell 的特性进行说明。如果曾经了解过函数式语言，本文可以作为语法简介来读。如果从未接触过函数式，那么你需要<strong>熟悉至少一门语言</strong>，并辅以适量的<a href="https://www.hackerrank.com/domains/fp/intro">习题</a>才可能入门。</p>
+
+        </div>
+        <div>
+          <a class="btn btn-default btn-sm" href="https://loggerhead.me/posts/haskell-kuai-su-ru-men.html">
+              查看全文
+          </a>
+        </div>
+      </article>
+      <hr>
+      <article>
+        <header class="page-header">
           <h2><a class="article-title" href="https://loggerhead.me/posts/gist-ssh-timeout-yuan-yin.html">Gist SSH Timeout 原因</a></h2>
 <footer class="post-info">
   <div class="row">
