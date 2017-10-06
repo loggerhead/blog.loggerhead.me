@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>loggerhead's blog</title><link href="https://loggerhead.me/" rel="alternate"></link><link href="https://loggerhead.me/atom.xml" rel="self"></link><id>https://loggerhead.me/</id><updated>2017-03-22T11:20:00+08:00</updated><entry><title>Shadowsocks 源码分析——UDP 代理</title><link href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-udp-dai-li.html" rel="alternate"></link><published>2017-03-22T11:20:00+08:00</published><updated>2017-03-22T11:20:00+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2017-03-22:posts/shadowsocks-yuan-ma-fen-xi-udp-dai-li.html</id><summary type="html">&lt;p&gt;我们在 &lt;a href="/posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html"&gt;Shadowsocks 源码分析——TCP 代理&lt;/a&gt;中分析了 TCP 部分的源码，UDP 的实现比 TCP 简单不少，同时代码结构上与 TCP 又有所不同。本文将在假设读者已经看过了前面几篇文章的基础上，对 UDP 部分的实现作分析。&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>loggerhead's blog</title><link href="https://loggerhead.me/" rel="alternate"></link><link href="https://loggerhead.me/atom.xml" rel="self"></link><id>https://loggerhead.me/</id><updated>2017-03-22T11:20:00+08:00</updated><entry><title>Shadowsocks 源码分析——UDP 代理</title><link href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-udp-dai-li.html" rel="alternate"></link><published>2017-03-22T11:20:00+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2017-03-22:posts/shadowsocks-yuan-ma-fen-xi-udp-dai-li.html</id><summary type="html">&lt;p&gt;我们在 &lt;a href="/posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html"&gt;Shadowsocks 源码分析——TCP 代理&lt;/a&gt;中分析了 TCP 部分的源码，UDP 的实现比 TCP 简单不少，同时代码结构上与 TCP 又有所不同。本文将在假设读者已经看过了前面几篇文章的基础上，对 UDP 部分的实现作分析。&lt;/p&gt;
 
 
 &lt;div class="toc"&gt;
@@ -140,12 +140,12 @@
 6
 7
 8&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#    request: RSV       FRAG ATYP DST.ADDR            DST.PORT  DATA&lt;/span&gt;
-&lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ss&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x01&lt;/span&gt; &lt;span class="mh"&gt;0x7f&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x01&lt;/span&gt; &lt;span class="mh"&gt;0x23&lt;/span&gt; &lt;span class="mh"&gt;0x28&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;1&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ss&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x01&lt;/span&gt; &lt;span class="mh"&gt;0x7f&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x01&lt;/span&gt; &lt;span class="mh"&gt;0x23&lt;/span&gt; &lt;span class="mh"&gt;0x28&lt;/span&gt; &lt;span class="sa"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;1&amp;#39;&lt;/span&gt;
                                   &lt;span class="mf"&gt;127.0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;9000&lt;/span&gt;
-&lt;span class="n"&gt;ss&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;server&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;1&amp;#39;&lt;/span&gt;
-&lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ss&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;1&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;ss&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;server&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="sa"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;1&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ss&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="sa"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;1&amp;#39;&lt;/span&gt;
 &lt;span class="c1"&gt;#   response: RSV       FRAG ATYP DST.ADDR            DST.PORT  DATA&lt;/span&gt;
-&lt;span class="n"&gt;ss&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x01&lt;/span&gt; &lt;span class="mh"&gt;0x7f&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x01&lt;/span&gt; &lt;span class="mh"&gt;0x23&lt;/span&gt; &lt;span class="mh"&gt;0x28&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;1&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;ss&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x01&lt;/span&gt; &lt;span class="mh"&gt;0x7f&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x01&lt;/span&gt; &lt;span class="mh"&gt;0x23&lt;/span&gt; &lt;span class="mh"&gt;0x28&lt;/span&gt; &lt;span class="sa"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;1&amp;#39;&lt;/span&gt;
                                   &lt;span class="mf"&gt;127.0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;9000&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
@@ -203,9 +203,9 @@
         &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;cmd&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;CMD_UDP_ASSOCIATE&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
             &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;debug&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;UDP associate&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
             &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_local_sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;family&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;socket&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;AF_INET6&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                &lt;span class="n"&gt;header&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\x05\x00\x00\x04&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;
+                &lt;span class="n"&gt;header&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sa"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\x05\x00\x00\x04&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;
             &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-                &lt;span class="n"&gt;header&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\x05\x00\x00\x01&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;
+                &lt;span class="n"&gt;header&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sa"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\x05\x00\x00\x01&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;
             &lt;span class="n"&gt;addr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;port&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_local_sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getsockname&lt;/span&gt;&lt;span class="p"&gt;()[:&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
             &lt;span class="n"&gt;addr_to_send&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;socket&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;inet_pton&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_local_sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;family&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                             &lt;span class="n"&gt;addr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -541,7 +541,7 @@
         &lt;span class="c1"&gt;# +----+------+------+----------+----------+----------+&lt;/span&gt;
         &lt;span class="c1"&gt;#             .                                       .&lt;/span&gt;
         &lt;span class="c1"&gt;#             |&amp;lt;--------------- data ----------------&amp;gt;|&lt;/span&gt;
-        &lt;span class="n"&gt;response&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\x00\x00\x00&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;
+        &lt;span class="n"&gt;response&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sa"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\x00\x00\x00&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;
     &lt;span class="c1"&gt;# 这里的 sock 就是 _handle_server 中的 client&lt;/span&gt;
     &lt;span class="n"&gt;client_addr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_client_fd_to_server_addr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fileno&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
     &lt;span class="c1"&gt;# 通过 _server_socket 将数据发送到 client 对应的地址&lt;/span&gt;
@@ -591,7 +591,7 @@
 &lt;p&gt;UDP 不像 TCP，没有连接的概念，&lt;a href="https://www.ietf.org/rfc/rfc1928.txt"&gt;RFC 1928&lt;/a&gt; 中的原文是“UDP association”，这里为了说明方便，暂且翻译成「UDP 会话」。&amp;#160;&lt;a class="footnote-backref" href="#fnref:udp-association" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/div&gt;</summary><category term="源码分析"></category><category term="Python"></category></entry><entry><title>2016 年终小结</title><link href="https://loggerhead.me/posts/2016-nian-zhong-xiao-jie.html" rel="alternate"></link><published>2017-02-01T00:08:20+08:00</published><updated>2017-02-01T00:08:20+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2017-02-01:posts/2016-nian-zhong-xiao-jie.html</id><summary type="html">&lt;p&gt;一年一度的年终小结又到了，今年似乎做了不少事情，又似乎没做什么，是时候写下来好好的审视一下了。&lt;/p&gt;
+&lt;/div&gt;</summary><category term="源码分析"></category><category term="Python"></category></entry><entry><title>2016 年终小结</title><link href="https://loggerhead.me/posts/2016-nian-zhong-xiao-jie.html" rel="alternate"></link><published>2017-02-01T00:08:20+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2017-02-01:posts/2016-nian-zhong-xiao-jie.html</id><summary type="html">&lt;p&gt;一年一度的年终小结又到了，今年似乎做了不少事情，又似乎没做什么，是时候写下来好好的审视一下了。&lt;/p&gt;
 
 
 &lt;h1 id="_1"&gt;技术上&lt;/h1&gt;
@@ -645,7 +645,7 @@
 &lt;ul&gt;
 &lt;li&gt;看完《&lt;a href="https://book.douban.com/subject/1148282/"&gt;计算机程序的构造和解释&lt;/a&gt;》；&lt;/li&gt;
 &lt;li&gt;完成程序员的三大浪漫中剩下的两个。&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="non-tech"></category></entry><entry><title>Shadowsocks 源码分析——超时处理</title><link href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-chao-shi-chu-li.html" rel="alternate"></link><published>2017-01-20T10:00:00+08:00</published><updated>2017-01-20T10:00:00+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2017-01-20:posts/shadowsocks-yuan-ma-fen-xi-chao-shi-chu-li.html</id><summary type="html">&lt;p&gt;Shadowsocks 是一款性能很不错的代理工具，它的高性能体现在两个方面：速度快、资源占用少。相信你在读完「&lt;a href="/posts/shadowsocks-yuan-ma-fen-xi-xie-yi-yu-jie-gou.html"&gt;协议与结构&lt;/a&gt;」和「&lt;a href="/posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html"&gt;TCP 代理&lt;/a&gt;」这两篇文章后，就能理解为什么 shadowsocks 的速度快了&lt;sup id="fnref:not-understand"&gt;&lt;a class="footnote-ref" href="#fn:not-understand" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;。资源占用少主要是因为 shadowsocks 使用了事件循环而不是多线程，另一方面，及时的进行超时和异常处理，能够将空闲的资源回收再利用也是原因之一。本文基于 &lt;a href="https://github.com/loggerhead/shadowsocks/tree/8e8ee5d490ce319b8db9b61001dac51a7da4be63"&gt;2.9.0 版本的源码&lt;/a&gt;介绍 &lt;code&gt;tcprelay.py&lt;/code&gt; 如何进行超时处理。&lt;/p&gt;
+&lt;/ul&gt;</summary><category term="non-tech"></category></entry><entry><title>Shadowsocks 源码分析——超时处理</title><link href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-chao-shi-chu-li.html" rel="alternate"></link><published>2017-01-20T10:00:00+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2017-01-20:posts/shadowsocks-yuan-ma-fen-xi-chao-shi-chu-li.html</id><summary type="html">&lt;p&gt;Shadowsocks 是一款性能很不错的代理工具，它的高性能体现在两个方面：速度快、资源占用少。相信你在读完「&lt;a href="/posts/shadowsocks-yuan-ma-fen-xi-xie-yi-yu-jie-gou.html"&gt;协议与结构&lt;/a&gt;」和「&lt;a href="/posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html"&gt;TCP 代理&lt;/a&gt;」这两篇文章后，就能理解为什么 shadowsocks 的速度快了&lt;sup id="fnref:not-understand"&gt;&lt;a class="footnote-ref" href="#fn:not-understand" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;。资源占用少主要是因为 shadowsocks 使用了事件循环而不是多线程，另一方面，及时的进行超时和异常处理，能够将空闲的资源回收再利用也是原因之一。本文基于 &lt;a href="https://github.com/loggerhead/shadowsocks/tree/8e8ee5d490ce319b8db9b61001dac51a7da4be63"&gt;2.9.0 版本的源码&lt;/a&gt;介绍 &lt;code&gt;tcprelay.py&lt;/code&gt; 如何进行超时处理。&lt;/p&gt;
 
 
 &lt;div class="toc"&gt;
@@ -843,7 +843,7 @@
 &lt;p&gt;&lt;code&gt;if&lt;/code&gt; 里面的语句时间复杂度是 O(1)，似乎这个 &lt;code&gt;if&lt;/code&gt; 是多余的，可能是作者考虑到能降低 CPU 占用率吧&amp;#160;&lt;a class="footnote-backref" href="#fnref:lower-modify" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/div&gt;</summary><category term="源码分析"></category><category term="Python"></category></entry><entry><title>Shadowsocks 源码分析——TCP 代理</title><link href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html" rel="alternate"></link><published>2017-01-04T10:40:00+08:00</published><updated>2017-01-04T10:40:00+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2017-01-04:posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html</id><summary type="html">&lt;p&gt;&lt;a href="/posts/shadowsocks-yuan-ma-fen-xi-xie-yi-yu-jie-gou.html"&gt;Shadowsocks 源码分析——协议与结构&lt;/a&gt; 已经对 shadowsocks 进行了大体上的分析，我们进一步的深入，来了解 shadowsocks 真正的核心——TCP 代理。&lt;/p&gt;
+&lt;/div&gt;</summary><category term="源码分析"></category><category term="Python"></category></entry><entry><title>Shadowsocks 源码分析——TCP 代理</title><link href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html" rel="alternate"></link><published>2017-01-04T10:40:00+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2017-01-04:posts/shadowsocks-yuan-ma-fen-xi-tcp-dai-li.html</id><summary type="html">&lt;p&gt;&lt;a href="/posts/shadowsocks-yuan-ma-fen-xi-xie-yi-yu-jie-gou.html"&gt;Shadowsocks 源码分析——协议与结构&lt;/a&gt; 已经对 shadowsocks 进行了大体上的分析，我们进一步的深入，来了解 shadowsocks 真正的核心——TCP 代理。&lt;/p&gt;
 
 
 &lt;div class="toc"&gt;
@@ -1267,8 +1267,8 @@
 
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_is_local&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
         &lt;span class="c1"&gt;# forward address to remote&lt;/span&gt;
-        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_write_to_sock&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\x05\x00\x00\x01&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;
-                             &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\x00\x00\x00\x00\x10\x10&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_write_to_sock&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="sa"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\x05\x00\x00\x01&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;
+                             &lt;span class="sa"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\x00\x00\x00\x00\x10\x10&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
                             &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_local_sock&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
         &lt;span class="n"&gt;data_to_send&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_encryptor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;encrypt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_data_to_write_to_remote&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data_to_send&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -1622,7 +1622,7 @@
 &lt;p&gt;&lt;code&gt;_create_remote_socket&lt;/code&gt; 中的 &lt;code&gt;remote_sock.setblocking(False)&lt;/code&gt; 将套接字设置为了非阻塞的，此时对 &lt;code&gt;connect&lt;/code&gt; 的调用要么立刻成功建立 TCP 连接，要么抛出含有 &lt;code&gt;errno.EINPROGRESS&lt;/code&gt; 的异常。&amp;#160;&lt;a class="footnote-backref" href="#fnref:non-blocking socket" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/div&gt;</summary><category term="源码分析"></category><category term="Python"></category></entry><entry><title>Shadowsocks 源码分析——协议与结构</title><link href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-xie-yi-yu-jie-gou.html" rel="alternate"></link><published>2016-12-06T21:00:00+08:00</published><updated>2016-12-06T21:00:00+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2016-12-06:posts/shadowsocks-yuan-ma-fen-xi-xie-yi-yu-jie-gou.html</id><summary type="html">&lt;p&gt;&lt;a href="https://github.com/shadowsocks/shadowsocks/tree/master"&gt;Shadowsocks&lt;/a&gt; 是一款著名的 SOCKS5 代理工具，深受人民群众喜爱。它的源码工程质量很高，十分便于研究。不过当你真正开始读源码的时候，会有一种似懂非懂的感觉，因为虽然它的大体框架容易理解，但是其中的诸多细节却不是那么简单明了。&lt;/p&gt;
+&lt;/div&gt;</summary><category term="源码分析"></category><category term="Python"></category></entry><entry><title>Shadowsocks 源码分析——协议与结构</title><link href="https://loggerhead.me/posts/shadowsocks-yuan-ma-fen-xi-xie-yi-yu-jie-gou.html" rel="alternate"></link><published>2016-12-06T21:00:00+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2016-12-06:posts/shadowsocks-yuan-ma-fen-xi-xie-yi-yu-jie-gou.html</id><summary type="html">&lt;p&gt;&lt;a href="https://github.com/shadowsocks/shadowsocks/tree/master"&gt;Shadowsocks&lt;/a&gt; 是一款著名的 SOCKS5 代理工具，深受人民群众喜爱。它的源码工程质量很高，十分便于研究。不过当你真正开始读源码的时候，会有一种似懂非懂的感觉，因为虽然它的大体框架容易理解，但是其中的诸多细节却不是那么简单明了。&lt;/p&gt;
 &lt;p&gt;本文将基于 &lt;a href="https://github.com/loggerhead/shadowsocks/tree/8e8ee5d490ce319b8db9b61001dac51a7da4be63"&gt;2.9.0 版本的源码&lt;/a&gt;对 shadowsocks 进行分析，希望读者看完以后能对 shadowsocks 的原理有个大体上的认识。为了行文简洁，在示例中我们用 ss 指代 shadowsocks。&lt;/p&gt;
 
 
@@ -1787,7 +1787,7 @@
 &lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ss&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x05&lt;/span&gt; &lt;span class="mh"&gt;0x01&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt;
 &lt;span class="n"&gt;ss&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x05&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt;
 &lt;span class="c1"&gt;# 建立连接&lt;/span&gt;
-&lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ss&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x05&lt;/span&gt; &lt;span class="mh"&gt;0x01&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x03&lt;/span&gt; &lt;span class="mh"&gt;0x0a&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;google.com&amp;#39;&lt;/span&gt;  &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x50&lt;/span&gt;
+&lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ss&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x05&lt;/span&gt; &lt;span class="mh"&gt;0x01&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x03&lt;/span&gt; &lt;span class="mh"&gt;0x0a&lt;/span&gt; &lt;span class="sa"&gt;b&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;google.com&amp;#39;&lt;/span&gt;  &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x50&lt;/span&gt;
 &lt;span class="n"&gt;ss&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x05&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x01&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x00&lt;/span&gt; &lt;span class="mh"&gt;0x10&lt;/span&gt; &lt;span class="mh"&gt;0x10&lt;/span&gt;
 &lt;span class="c1"&gt;# 传输阶段&lt;/span&gt;
 &lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;ss&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;remote&lt;/span&gt;
@@ -2094,7 +2094,7 @@
 &lt;p&gt;因为路由器的 CPU 性能远不如 PC，内存也很少，可能只有几十 MB 可以用。&amp;#160;&lt;a class="footnote-backref" href="#fnref:router-problem" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/div&gt;</summary><category term="源码分析"></category><category term="Python"></category></entry><entry><title>逆向工程初体验</title><link href="https://loggerhead.me/posts/ni-xiang-gong-cheng-chu-ti-yan.html" rel="alternate"></link><published>2016-05-19T15:37:01+08:00</published><updated>2016-05-19T15:37:01+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2016-05-19:posts/ni-xiang-gong-cheng-chu-ti-yan.html</id><summary type="html">&lt;p&gt;为了读懂 &lt;a href="https://pdos.csail.mit.edu/6.828/2014/jos.git/"&gt;JOS&lt;/a&gt; 的代码，最近学了一波汇编。主要是通过粗略的过一遍 &lt;a href="http://opensecuritytraining.info/"&gt;OpenSecurityTraining.info&lt;/a&gt; 上的 &lt;a href="http://opensecuritytraining.info/IntroX86.html"&gt;Introductory Intel x86 课程&lt;/a&gt; 来了解大概，因为已经学过一次，所以只要捡起来直接看代码就行了，遇到模糊不清的地方就详细看看 &lt;a href="http://www.drpaulcarter.com/pcasm/"&gt;PC Assembly Tutorial&lt;/a&gt;。&lt;/p&gt;
+&lt;/div&gt;</summary><category term="源码分析"></category><category term="Python"></category></entry><entry><title>逆向工程初体验</title><link href="https://loggerhead.me/posts/ni-xiang-gong-cheng-chu-ti-yan.html" rel="alternate"></link><published>2016-05-19T15:37:01+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2016-05-19:posts/ni-xiang-gong-cheng-chu-ti-yan.html</id><summary type="html">&lt;p&gt;为了读懂 &lt;a href="https://pdos.csail.mit.edu/6.828/2014/jos.git/"&gt;JOS&lt;/a&gt; 的代码，最近学了一波汇编。主要是通过粗略的过一遍 &lt;a href="http://opensecuritytraining.info/"&gt;OpenSecurityTraining.info&lt;/a&gt; 上的 &lt;a href="http://opensecuritytraining.info/IntroX86.html"&gt;Introductory Intel x86 课程&lt;/a&gt; 来了解大概，因为已经学过一次，所以只要捡起来直接看代码就行了，遇到模糊不清的地方就详细看看 &lt;a href="http://www.drpaulcarter.com/pcasm/"&gt;PC Assembly Tutorial&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;Introductory Intel x86 课程上有个很有趣的逆向工程作业——拆除「炸弹」。「炸弹」是一个二进制可执行文件，由 6 个阶段和 1 个隐藏阶段组成，每个阶段都会读取用户输入，只有特定的输入才能通过这个阶段，在通过所有阶段后，炸弹就被成功拆除了。之所以说它有趣，是因为：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;只有二进制文件，所以只能通过反汇编后读 x86 汇编来拆除炸弹，难度不小&lt;/li&gt;
@@ -2224,8 +2224,8 @@ r
 
 &lt;p&gt;我们尝试打印一下 &lt;code&gt;0x80497c0&lt;/code&gt; 和 &lt;code&gt;eax&lt;/code&gt; 指向的字符串：&lt;/p&gt;
 &lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
-2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="x"&gt;x/s 0x80497c0&lt;/span&gt;
-&lt;span class="x"&gt;x/s &lt;/span&gt;&lt;span class="p"&gt;$&lt;/span&gt;&lt;span class="nv"&gt;eax&lt;/span&gt;&lt;span class="x"&gt;&lt;/span&gt;
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;x/s 0x80497c0
+x/s $eax
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 
@@ -3398,7 +3398,7 @@ r
 &lt;li&gt;在第四阶段加点料才能进入隐藏阶段&lt;/li&gt;
 &lt;li&gt;&lt;img alt="fun7_tree" src="https://cdn.loggerhead.me/images/fun7_tree.png" /&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;成功解决这个炸弹相信非常有成就感，不过其实拆除炸弹有个十分简单的办法——&lt;code&gt;Ctrl+C&lt;/code&gt; :P&lt;/p&gt;</summary><category term="汇编"></category><category term="Linux"></category></entry><entry><title>Python 的 import 机制</title><link href="https://loggerhead.me/posts/python-de-import-ji-zhi.html" rel="alternate"></link><published>2016-04-25T14:15:50+08:00</published><updated>2016-04-25T14:15:50+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2016-04-25:posts/python-de-import-ji-zhi.html</id><summary type="html">&lt;p&gt;一直对 Python 的 import 机制不甚了解，这次在写 &lt;a href="https://github.com/loggerhead/Easy-Karabiner"&gt;Easy-Karabiner&lt;/a&gt; 的时候就踩坑了，顺便了解了一下，发现这玩意儿还不是那么「符合直觉」，遂写篇博客讲讲。&lt;/p&gt;
+&lt;p&gt;成功解决这个炸弹相信非常有成就感，不过其实拆除炸弹有个十分简单的办法——&lt;code&gt;Ctrl+C&lt;/code&gt; :P&lt;/p&gt;</summary><category term="汇编"></category><category term="Linux"></category></entry><entry><title>Python 的 import 机制</title><link href="https://loggerhead.me/posts/python-de-import-ji-zhi.html" rel="alternate"></link><published>2016-04-25T14:15:50+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2016-04-25:posts/python-de-import-ji-zhi.html</id><summary type="html">&lt;p&gt;一直对 Python 的 import 机制不甚了解，这次在写 &lt;a href="https://github.com/loggerhead/Easy-Karabiner"&gt;Easy-Karabiner&lt;/a&gt; 的时候就踩坑了，顺便了解了一下，发现这玩意儿还不是那么「符合直觉」，遂写篇博客讲讲。&lt;/p&gt;
 
 
 &lt;div class="toc"&gt;
@@ -3788,7 +3788,7 @@ Go, go, go!
 &lt;p&gt;官方说法是「Python 安装时设定的默认路径」（The installation-dependent default path），而这玩意儿实际上是通过 &lt;code&gt;site&lt;/code&gt; 模块来设置的。&amp;#160;&lt;a class="footnote-backref" href="#fnref:import-site" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/div&gt;</summary><category term="Python"></category><category term="编程语言"></category></entry><entry><title>给 GitHub 项目戴上勋章</title><link href="https://loggerhead.me/posts/gei-github-xiang-mu-dai-shang-xun-zhang.html" rel="alternate"></link><published>2016-03-27T10:20:12+08:00</published><updated>2016-03-27T10:20:12+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2016-03-27:posts/gei-github-xiang-mu-dai-shang-xun-zhang.html</id><summary type="html">&lt;p&gt;如果你常常使用 GitHub，稍微留心就会发现，不少项目都有勋章（badges），那这些勋章有什么用呢？要怎么给自己的项目也「戴上」勋章呢？&lt;/p&gt;
+&lt;/div&gt;</summary><category term="Python"></category><category term="编程语言"></category></entry><entry><title>给 GitHub 项目戴上勋章</title><link href="https://loggerhead.me/posts/gei-github-xiang-mu-dai-shang-xun-zhang.html" rel="alternate"></link><published>2016-03-27T10:20:12+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2016-03-27:posts/gei-github-xiang-mu-dai-shang-xun-zhang.html</id><summary type="html">&lt;p&gt;如果你常常使用 GitHub，稍微留心就会发现，不少项目都有勋章（badges），那这些勋章有什么用呢？要怎么给自己的项目也「戴上」勋章呢？&lt;/p&gt;
 
 
 &lt;table&gt;
@@ -3930,7 +3930,7 @@ Go, go, go!
 &lt;p&gt;PyPI 是 Python Package Index 的缩写，通过 &lt;code&gt;pip install&lt;/code&gt; 命令下载的包都必须先上传到这里，具体的操作过程参见博客：&lt;a href="http://peterdowns.com/posts/first-time-with-pypi.html"&gt;How to submit a package to PyPI&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:How-to-submit-a-package-to-PyPI" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/div&gt;</summary><category term="GitHub"></category><category term="non-tech"></category></entry><entry><title>2015 年终小结</title><link href="https://loggerhead.me/posts/2015-nian-zhong-xiao-jie.html" rel="alternate"></link><published>2016-01-29T00:04:33+08:00</published><updated>2016-01-29T00:04:33+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2016-01-29:posts/2015-nian-zhong-xiao-jie.html</id><summary type="html">&lt;p&gt;呜。。写小结完全是为了督促自己一把，顺便理一理过去一年自己把时间都花在哪了。就像理财，不怕亏损，就怕花得不明不白。很具体的也没啥好说的，就随便过一过好了。&lt;/p&gt;
+&lt;/div&gt;</summary><category term="GitHub"></category><category term="non-tech"></category></entry><entry><title>2015 年终小结</title><link href="https://loggerhead.me/posts/2015-nian-zhong-xiao-jie.html" rel="alternate"></link><published>2016-01-29T00:04:33+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2016-01-29:posts/2015-nian-zhong-xiao-jie.html</id><summary type="html">&lt;p&gt;呜。。写小结完全是为了督促自己一把，顺便理一理过去一年自己把时间都花在哪了。就像理财，不怕亏损，就怕花得不明不白。很具体的也没啥好说的，就随便过一过好了。&lt;/p&gt;
 
 
 &lt;h1 id="_1"&gt;考研&lt;/h1&gt;
@@ -3961,7 +3961,7 @@ Go, go, go!
 &lt;p&gt;算法虽然不算短板，但是也不算很好，为了让它更长一点，又开始刷 OJ 题。不过始终停留在 &lt;code&gt;i&lt;/code&gt; 阶段，没有发生 &lt;code&gt;i+1&lt;/code&gt; 的变化。因为总是对函数式念念不忘，就顺便学了久仰大名的 Haskell。总算没白学，了解到很多新奇的东西，编程思维有所提升。抱着深入了解函数式的心态买了本 &lt;a href="http://book.douban.com/subject/1148282/"&gt;计算机程序的构造和解释&lt;/a&gt;。正如豆瓣上的评论所说：“有些书是这样子，你抱着一个目的去读，结果发现它完全写的不是你期待的那些内容，但是却给了你更大的惊喜。” 这本书又简称为 SICP，很难一两句话说清楚它到底讲了些什么，只能说真的是书如其名，千万别误会，里面的内容和硬件无关。暂时只读了前三章，思想很精华，收获不小。&lt;/p&gt;
 &lt;h2 id="_7"&gt;接下来..%&amp;amp;$@&lt;/h2&gt;
 &lt;p&gt;考试，写作业，考试，做 project ... 忙的不可开交，想清楚了一些事情。看了吴恩达的公开课，发现机器学习挺好玩的。&lt;/p&gt;
-&lt;p&gt;&lt;img alt="一切都是兴趣使然" src="https://cdn.loggerhead.me/images/goofysmile.png/webp" /&gt;&lt;/p&gt;</summary><category term="non-tech"></category></entry><entry><title>求 Fibonacci 数列的 N 种算法</title><link href="https://loggerhead.me/posts/qiu-fibonacci-shu-lie-de-n-chong-suan-fa.html" rel="alternate"></link><published>2015-10-28T21:58:40+08:00</published><updated>2015-10-28T21:58:40+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-10-28:posts/qiu-fibonacci-shu-lie-de-n-chong-suan-fa.html</id><summary type="html">&lt;p&gt;高中学过一个神奇的数列——Fibonacci 数列，它的特点是：除了最初的两个 Fibonacci 数以外，其余的所有 Fibonacci 数都等于前两个 Fibonacci 数之和。表达成数学公式就是：&lt;/p&gt;
+&lt;p&gt;&lt;img alt="一切都是兴趣使然" src="https://cdn.loggerhead.me/images/goofysmile.png/webp" /&gt;&lt;/p&gt;</summary><category term="non-tech"></category></entry><entry><title>求 Fibonacci 数列的 N 种算法</title><link href="https://loggerhead.me/posts/qiu-fibonacci-shu-lie-de-n-chong-suan-fa.html" rel="alternate"></link><published>2015-10-28T21:58:40+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-10-28:posts/qiu-fibonacci-shu-lie-de-n-chong-suan-fa.html</id><summary type="html">&lt;p&gt;高中学过一个神奇的数列——Fibonacci 数列，它的特点是：除了最初的两个 Fibonacci 数以外，其余的所有 Fibonacci 数都等于前两个 Fibonacci 数之和。表达成数学公式就是：&lt;/p&gt;
 &lt;div class="math"&gt;
 F_{n}=\begin{cases}
       0               &amp;amp; n=0\\
@@ -4248,7 +4248,7 @@ f1'' &amp;amp;= f1'\times q+f2'\times q                   \\
 &lt;p&gt;&lt;span class="math"&gt;O(2^n)&lt;/span&gt; 是时间上界，精确的时间界是个无理数的 n 次幂&amp;#160;&lt;a class="footnote-backref" href="#fnref:fib1 time complexity" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/div&gt;</summary><category term="算法"></category><category term="Python"></category></entry><entry><title>绝对安全的量子加密</title><link href="https://loggerhead.me/posts/jue-dui-an-quan-de-liang-zi-jia-mi.html" rel="alternate"></link><published>2015-10-10T19:09:05+08:00</published><updated>2015-10-10T19:09:05+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-10-10:posts/jue-dui-an-quan-de-liang-zi-jia-mi.html</id><summary type="html">&lt;p&gt;&lt;a href="https://zh.wikipedia.org/wiki/量子密碼學"&gt;量子加密&lt;/a&gt;号称「绝对安全」绝不是哗众取宠，为什么这样说呢？因为与传统加密算法不同，量子加密的&lt;strong&gt;原理基于物理定律&lt;/strong&gt;，而不是特定数学问题的计算复杂性。因此，无论计算机的运算能力怎么增强，也丝毫不影响量子加密的安全性。本文以 &lt;a href="https://zh.wikipedia.org/wiki/量子密碼學#BB84.E5.8D.8F.E8.AE.AE"&gt;BB84 协议&lt;/a&gt;来介绍量子加密，下文为了方便不对量子加密和 BB84 协议进行区分。&lt;/p&gt;
+&lt;/div&gt;</summary><category term="算法"></category><category term="Python"></category></entry><entry><title>绝对安全的量子加密</title><link href="https://loggerhead.me/posts/jue-dui-an-quan-de-liang-zi-jia-mi.html" rel="alternate"></link><published>2015-10-10T19:09:05+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-10-10:posts/jue-dui-an-quan-de-liang-zi-jia-mi.html</id><summary type="html">&lt;p&gt;&lt;a href="https://zh.wikipedia.org/wiki/量子密碼學"&gt;量子加密&lt;/a&gt;号称「绝对安全」绝不是哗众取宠，为什么这样说呢？因为与传统加密算法不同，量子加密的&lt;strong&gt;原理基于物理定律&lt;/strong&gt;，而不是特定数学问题的计算复杂性。因此，无论计算机的运算能力怎么增强，也丝毫不影响量子加密的安全性。本文以 &lt;a href="https://zh.wikipedia.org/wiki/量子密碼學#BB84.E5.8D.8F.E8.AE.AE"&gt;BB84 协议&lt;/a&gt;来介绍量子加密，下文为了方便不对量子加密和 BB84 协议进行区分。&lt;/p&gt;
 
 
 &lt;div class="toc"&gt;
@@ -4447,7 +4447,7 @@ f1'' &amp;amp;= f1'\times q+f2'\times q                   \\
 &lt;li&gt;&lt;a href="https://zh.wikipedia.org/wiki/量子密碼學"&gt;量子密碼學&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://ftlin.sam.pccu.edu.tw/QuantumLab/Cryptography/BB84_Intro.htm"&gt;BB84 量子密鑰協議的說明&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;视频：&lt;a href="https://www.youtube.com/watch?v=UVzRbU6y7Ks"&gt;The BB84 Protocol&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="量子加密"></category><category term="加密算法"></category></entry><entry><title>Haskell 快速入门</title><link href="https://loggerhead.me/posts/haskell-kuai-su-ru-men.html" rel="alternate"></link><published>2015-10-01T21:35:00+08:00</published><updated>2015-10-01T21:35:00+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-10-01:posts/haskell-kuai-su-ru-men.html</id><summary type="html">&lt;p&gt;当你开始接触函数式的时候，经常能看到 Haskell 的身影。那么 Haskell 究竟具有什么特点，让众多程序员为之倾倒？百闻不如一见，看几个例子你就懂了：&lt;/p&gt;
+&lt;/ul&gt;</summary><category term="量子加密"></category><category term="加密算法"></category></entry><entry><title>Haskell 快速入门</title><link href="https://loggerhead.me/posts/haskell-kuai-su-ru-men.html" rel="alternate"></link><published>2015-10-01T21:35:00+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-10-01:posts/haskell-kuai-su-ru-men.html</id><summary type="html">&lt;p&gt;当你开始接触函数式的时候，经常能看到 Haskell 的身影。那么 Haskell 究竟具有什么特点，让众多程序员为之倾倒？百闻不如一见，看几个例子你就懂了：&lt;/p&gt;
 &lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
 2
 3
@@ -5194,7 +5194,7 @@ mod :: Integral a =&amp;gt; a -&amp;gt; a -&amp;gt; a
 &lt;p&gt;英文不好的同学可以看 &lt;a href="http://learnyoua.haskell.sg/content/zh-cn/index.html"&gt;中文版&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:HASKELL 趣学指南" rev="footnote" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/div&gt;</summary><category term="Haskell"></category><category term="编程语言"></category></entry><entry><title>Erlang 和编码风格--对大多数防御性编码风格的思考</title><link href="https://loggerhead.me/posts/erlang-he-bian-ma-feng-ge-dui-da-duo-shu-fang-yu-xing-bian-ma-feng-ge-de-si-kao.html" rel="alternate"></link><published>2015-09-20T12:09:00+08:00</published><updated>2015-09-20T12:09:00+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-09-20:posts/erlang-he-bian-ma-feng-ge-dui-da-duo-shu-fang-yu-xing-bian-ma-feng-ge-de-si-kao.html</id><summary type="html">&lt;p&gt;原文：&lt;a href="https://medium.com/@jlouis666/erlang-and-code-style-b5936dceb5e4"&gt;Erlang and code style--Musings on mostly defensive programming styles&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;</summary><category term="Haskell"></category><category term="编程语言"></category></entry><entry><title>Erlang 和编码风格--对大多数防御性编码风格的思考</title><link href="https://loggerhead.me/posts/erlang-he-bian-ma-feng-ge-dui-da-duo-shu-fang-yu-xing-bian-ma-feng-ge-de-si-kao.html" rel="alternate"></link><published>2015-09-20T12:09:00+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-09-20:posts/erlang-he-bian-ma-feng-ge-dui-da-duo-shu-fang-yu-xing-bian-ma-feng-ge-de-si-kao.html</id><summary type="html">&lt;p&gt;原文：&lt;a href="https://medium.com/@jlouis666/erlang-and-code-style-b5936dceb5e4"&gt;Erlang and code style--Musings on mostly defensive programming styles&lt;/a&gt;&lt;/p&gt;
 
 
 &lt;hr /&gt;
@@ -5582,7 +5582,7 @@ mod :: Integral a =&amp;gt; a -&amp;gt; a -&amp;gt; a
 &lt;p&gt;原文：Closing remarks&amp;#160;&lt;a class="footnote-backref" href="#fnref:title7" rev="footnote" title="Jump back to footnote 20 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/div&gt;</summary><category term="翻译"></category><category term="Erlang"></category><category term="编程语言"></category></entry><entry><title>Gist SSH Timeout 原因</title><link href="https://loggerhead.me/posts/gist-ssh-timeout-yuan-yin.html" rel="alternate"></link><published>2015-09-17T22:28:06+08:00</published><updated>2015-09-17T22:28:06+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-09-17:posts/gist-ssh-timeout-yuan-yin.html</id><summary type="html">&lt;p&gt;最近 clone gist 的时候总是 timeout，Google 了一番，在 ssh 上找了半天原因后发现是因为 &lt;strong&gt;GFW 把 Gist 给墙了&lt;/strong&gt;。&lt;/p&gt;
+&lt;/div&gt;</summary><category term="翻译"></category><category term="Erlang"></category><category term="编程语言"></category></entry><entry><title>Gist SSH Timeout 原因</title><link href="https://loggerhead.me/posts/gist-ssh-timeout-yuan-yin.html" rel="alternate"></link><published>2015-09-17T22:28:06+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-09-17:posts/gist-ssh-timeout-yuan-yin.html</id><summary type="html">&lt;p&gt;最近 clone gist 的时候总是 timeout，Google 了一番，在 ssh 上找了半天原因后发现是因为 &lt;strong&gt;GFW 把 Gist 给墙了&lt;/strong&gt;。&lt;/p&gt;
 
 
 &lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
@@ -5593,7 +5593,7 @@ mod :: Integral a =&amp;gt; a -&amp;gt; a -&amp;gt; a
 6
 7&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git clone git@gist.github.com:48facfaab6db640c2b3f.git
 Cloning into &lt;span class="s1"&gt;&amp;#39;48facfaab6db640c2b3f&amp;#39;&lt;/span&gt;...
-ssh: connect to host gist.github.com port 22: Operation timed out
+ssh: connect to host gist.github.com port &lt;span class="m"&gt;22&lt;/span&gt;: Operation timed out
 fatal: Could not &lt;span class="nb"&gt;read&lt;/span&gt; from remote repository.
 
 Please make sure you have the correct access rights
@@ -5614,7 +5614,7 @@ and the repository exists.
 &lt;li&gt;
 &lt;p&gt;用 VPN&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ol&gt;</summary><category term="Github"></category><category term="non-tech"></category></entry><entry><title>Erlang 快速入门</title><link href="https://loggerhead.me/posts/erlang-kuai-su-ru-men.html" rel="alternate"></link><published>2015-08-21T21:08:25+08:00</published><updated>2015-08-21T21:08:25+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-08-21:posts/erlang-kuai-su-ru-men.html</id><summary type="html">&lt;p&gt;在很多语言中，我们都能看到&lt;strong&gt;函数式范型&lt;/strong&gt;、&lt;strong&gt;动态类型&lt;/strong&gt;、&lt;strong&gt;类型系统&lt;/strong&gt;的身影，而 Erlang 在此基础上发展出了一些自成一派的特点：&lt;/p&gt;
+&lt;/ol&gt;</summary><category term="Github"></category><category term="non-tech"></category></entry><entry><title>Erlang 快速入门</title><link href="https://loggerhead.me/posts/erlang-kuai-su-ru-men.html" rel="alternate"></link><published>2015-08-21T21:08:25+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-08-21:posts/erlang-kuai-su-ru-men.html</id><summary type="html">&lt;p&gt;在很多语言中，我们都能看到&lt;strong&gt;函数式范型&lt;/strong&gt;、&lt;strong&gt;动态类型&lt;/strong&gt;、&lt;strong&gt;类型系统&lt;/strong&gt;的身影，而 Erlang 在此基础上发展出了一些自成一派的特点：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;轻量级进程&lt;/strong&gt;。Erlang 的进程既不是操作系统层面的进程，也不是线程，而是由 Erlang 虚拟机进行管理调度的无状态的进程。建立一个进程的成本非常低，在博主机器上（2.4 GHz Intel Core i5，8 GB 1600 MHz DDR3）平均只需要 2~4 us，而建立 80 万个进程也只花费了几秒的时间，并且据官方说法，建立一个进程的内存占用不到 400 字。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;消息原语&lt;/strong&gt;。Erlang 直接在语言层面支持进程间通讯，并且在内部对并发进行了同步处理，用户不需要再关心多进程并发会不会发生同步问题，大大降低了在进程间传递消息的难度。例如，一句话就能搞定发消息：&lt;code&gt;Pid ! Message.&lt;/code&gt;，收消息也就多个匹配和处理的过程：&lt;code&gt;receive Message -&amp;gt; handle(Message) end.&lt;/code&gt;。&lt;/li&gt;
@@ -6686,7 +6686,7 @@ erl -man lists
 &lt;p&gt;详见官方文档 &lt;a href="http://www.erlang.org/doc/getting_started/conc_prog.html"&gt;Concurrent Programming&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:conc_prog" rev="footnote" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/div&gt;</summary><category term="Erlang"></category><category term="编程语言"></category></entry><entry><title>如何教你女朋友编程</title><link href="https://loggerhead.me/posts/ru-he-jiao-ni-nu-peng-you-bian-cheng.html" rel="alternate"></link><published>2015-07-30T18:05:05+08:00</published><updated>2015-07-30T18:05:05+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-07-30:posts/ru-he-jiao-ni-nu-peng-you-bian-cheng.html</id><summary type="html">&lt;p&gt;原文链接：&lt;a href="http://blog.jakubarnold.cz/2013/09/23/how-to-teach-your-girlfriend-programming.html"&gt;How to Teach Your Girlfriend Programming&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;</summary><category term="Erlang"></category><category term="编程语言"></category></entry><entry><title>如何教你女朋友编程</title><link href="https://loggerhead.me/posts/ru-he-jiao-ni-nu-peng-you-bian-cheng.html" rel="alternate"></link><published>2015-07-30T18:05:05+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-07-30:posts/ru-he-jiao-ni-nu-peng-you-bian-cheng.html</id><summary type="html">&lt;p&gt;原文链接：&lt;a href="http://blog.jakubarnold.cz/2013/09/23/how-to-teach-your-girlfriend-programming.html"&gt;How to Teach Your Girlfriend Programming&lt;/a&gt;&lt;/p&gt;
 
 
 &lt;hr /&gt;
@@ -6781,7 +6781,7 @@ erl -man lists
 &lt;p&gt;函数式编程中的一个概念，在任何 FP 语言中都能使用，详见 &lt;a href="http://www.zhihu.com/question/19635359"&gt;知乎&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:monad" rev="footnote" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/div&gt;</summary><category term="翻译"></category><category term="non-tech"></category></entry><entry><title>快速回忆你用过的 Git</title><link href="https://loggerhead.me/posts/kuai-su-hui-yi-ni-yong-guo-de-git.html" rel="alternate"></link><published>2015-07-02T15:22:38+08:00</published><updated>2015-07-02T15:22:38+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-07-02:posts/kuai-su-hui-yi-ni-yong-guo-de-git.html</id><summary type="html">&lt;p&gt;本文所介绍的内容大部分是 &lt;a href="https://git-scm.com/doc"&gt;Pro Git 2nd Edition&lt;/a&gt; 第二、三章中出现的常用命令，如果你有时间，建议将此书看一遍。&lt;/p&gt;
+&lt;/div&gt;</summary><category term="翻译"></category><category term="non-tech"></category></entry><entry><title>快速回忆你用过的 Git</title><link href="https://loggerhead.me/posts/kuai-su-hui-yi-ni-yong-guo-de-git.html" rel="alternate"></link><published>2015-07-02T15:22:38+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-07-02:posts/kuai-su-hui-yi-ni-yong-guo-de-git.html</id><summary type="html">&lt;p&gt;本文所介绍的内容大部分是 &lt;a href="https://git-scm.com/doc"&gt;Pro Git 2nd Edition&lt;/a&gt; 第二、三章中出现的常用命令，如果你有时间，建议将此书看一遍。&lt;/p&gt;
 
 
 &lt;div class="toc"&gt;
@@ -7188,9 +7188,9 @@ git clone --recursive https://github.com/chaconinc/MainProject
 3
 4
 5&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# git branch -vv&lt;/span&gt;
-  iss53     7e424c3 &lt;span class="o"&gt;[&lt;/span&gt;origin/iss53: ahead 2&lt;span class="o"&gt;]&lt;/span&gt; forgot something          &lt;span class="c1"&gt;# 本地分支比远程分支多2次提交&lt;/span&gt;
+  iss53     7e424c3 &lt;span class="o"&gt;[&lt;/span&gt;origin/iss53: ahead &lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; forgot something          &lt;span class="c1"&gt;# 本地分支比远程分支多2次提交&lt;/span&gt;
   master    1ae2a45 &lt;span class="o"&gt;[&lt;/span&gt;origin/master&lt;span class="o"&gt;]&lt;/span&gt; deploying index fix
-* serverfix f8674d9 &lt;span class="o"&gt;[&lt;/span&gt;teamone/server-fix-good: ahead 3, behind 1&lt;span class="o"&gt;]&lt;/span&gt; fix  &lt;span class="c1"&gt;# 当前分支。与远程分支有4次提交未同步&lt;/span&gt;
+* serverfix f8674d9 &lt;span class="o"&gt;[&lt;/span&gt;teamone/server-fix-good: ahead &lt;span class="m"&gt;3&lt;/span&gt;, behind &lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; fix  &lt;span class="c1"&gt;# 当前分支。与远程分支有4次提交未同步&lt;/span&gt;
   testing   5ea463a trying something new                              &lt;span class="c1"&gt;# 没有设置同步的远程分支&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
@@ -7222,7 +7222,7 @@ git checkout -b testing origin/master
 &lt;li&gt;&lt;code&gt;git tag -a &amp;lt;tagname&amp;gt; -m &amp;lt;msg&amp;gt;&lt;/code&gt;: 创建带注释的标签&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;git tag &amp;lt;tagname&amp;gt; [&amp;lt;commit&amp;gt;]&lt;/code&gt;: 对 &lt;code&gt;&amp;lt;commit&amp;gt;&lt;/code&gt; 创建标签&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;git tag -d &amp;lt;tagname&amp;gt;&lt;/code&gt;: 删除标签&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="工具"></category></entry><entry><title>网络编程--IP 地址</title><link href="https://loggerhead.me/posts/wang-luo-bian-cheng-ip-di-zhi.html" rel="alternate"></link><published>2015-05-06T11:04:38+08:00</published><updated>2015-05-06T11:04:38+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-05-06:posts/wang-luo-bian-cheng-ip-di-zhi.html</id><summary type="html">&lt;p&gt;我们在进行网络编程时，绝大部分情况都会涉及到 IP 协议，因此了解一下 IP 协议是很有必要的。不过由于 IP 协议本身不算简单，而我们更多的是使用 TCP/UDP 等上层协议进行网络编程，因此要必要了解一下 IP 地址。&lt;/p&gt;
+&lt;/ul&gt;</summary><category term="工具"></category></entry><entry><title>网络编程--IP 地址</title><link href="https://loggerhead.me/posts/wang-luo-bian-cheng-ip-di-zhi.html" rel="alternate"></link><published>2015-05-06T11:04:38+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-05-06:posts/wang-luo-bian-cheng-ip-di-zhi.html</id><summary type="html">&lt;p&gt;我们在进行网络编程时，绝大部分情况都会涉及到 IP 协议，因此了解一下 IP 协议是很有必要的。不过由于 IP 协议本身不算简单，而我们更多的是使用 TCP/UDP 等上层协议进行网络编程，因此要必要了解一下 IP 地址。&lt;/p&gt;
 
 
 &lt;div class="toc"&gt;
@@ -7412,7 +7412,7 @@ git checkout -b testing origin/master
 &lt;p&gt;全零网络的详情见 &lt;a href="https://en.wikipedia.org/wiki/0.0.0.0"&gt;Wiki&lt;/a&gt; 和 &lt;a href="http://www.cnblogs.com/hnrainll/archive/2011/10/13/2210101.html"&gt;hnrainll的博客&lt;/a&gt;。&amp;#160;&lt;a class="footnote-backref" href="#fnref:0.0.0.0" rev="footnote" title="Jump back to footnote 6 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/div&gt;</summary><category term="网络"></category><category term="IP"></category></entry><entry><title>LaTeX 排版简介--快速入门</title><link href="https://loggerhead.me/posts/latex-pai-ban-jian-jie-kuai-su-ru-men.html" rel="alternate"></link><published>2015-04-18T16:24:00+08:00</published><updated>2015-04-18T16:24:00+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-04-18:posts/latex-pai-ban-jian-jie-kuai-su-ru-men.html</id><summary type="html">&lt;p&gt;本文将介绍以下内容：&lt;/p&gt;
+&lt;/div&gt;</summary><category term="网络"></category><category term="IP"></category></entry><entry><title>LaTeX 排版简介--快速入门</title><link href="https://loggerhead.me/posts/latex-pai-ban-jian-jie-kuai-su-ru-men.html" rel="alternate"></link><published>2015-04-18T16:24:00+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-04-18:posts/latex-pai-ban-jian-jie-kuai-su-ru-men.html</id><summary type="html">&lt;p&gt;本文将介绍以下内容：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;LaTeX 对空格、换行、注释的处理&lt;/li&gt;
 &lt;li&gt;LaTeX 命令的基本形式&lt;/li&gt;
@@ -7819,7 +7819,7 @@ xelatex -shell-escape xxx.ins&lt;/code&gt;&lt;/p&gt;
 &lt;li&gt;&lt;a href="http://mirror.utexas.edu/ctan/macros/xetex/latex/xecjk/xeCJK.pdf"&gt;xeCJK&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://www.maths.tcd.ie/~dwilkins/LaTeXPrimer/Preamble.html"&gt;The Preamble of the LaTeX Input file&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://pyroc.at/blog/2013/04/03/cjk-italics/"&gt;汉字中的“斜体”&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="LaTeX"></category></entry><entry><title>LaTeX 在 Mac 下的中文环境配置</title><link href="https://loggerhead.me/posts/latex-zai-mac-xia-de-zhong-wen-huan-jing-pei-zhi.html" rel="alternate"></link><published>2015-04-07T22:51:00+08:00</published><updated>2015-04-07T22:51:00+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-04-07:posts/latex-zai-mac-xia-de-zhong-wen-huan-jing-pei-zhi.html</id><summary type="html">&lt;ul&gt;
+&lt;/ul&gt;</summary><category term="LaTeX"></category></entry><entry><title>LaTeX 在 Mac 下的中文环境配置</title><link href="https://loggerhead.me/posts/latex-zai-mac-xia-de-zhong-wen-huan-jing-pei-zhi.html" rel="alternate"></link><published>2015-04-07T22:51:00+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2015-04-07:posts/latex-zai-mac-xia-de-zhong-wen-huan-jing-pei-zhi.html</id><summary type="html">&lt;ul&gt;
 &lt;li&gt;本文的目标是让需要对&lt;strong&gt;中文&lt;/strong&gt;论文进行排版的 &lt;strong&gt;OS X&lt;/strong&gt; 用户安装配置好中文环境，编译示例得到 foo.pdf。&lt;/li&gt;
 &lt;li&gt;如果只需排版英文，那么中文配置部分可以跳过。&lt;/li&gt;
 &lt;li&gt;如果是 Linux/Unix 或 Windows 用户，将 Skim 换成相应的 pdf阅读器（LaTeXing 默认设置中有提及）后，LaTeXing 部分仍适用，但 MacTeX 部分不再适用。&lt;/li&gt;
@@ -8028,7 +8028,7 @@ sudo ln -s /Library/TeX/Distributions/Programs/texbin/xelatex /usr/xelatex&lt;/c
 &lt;h2 id="mactex-miktex"&gt;MacTeX 与 MikTeX&lt;/h2&gt;
 &lt;p&gt;不同的 TeX 发行版本而已，比如 OS X 下有 MacTeX，Windows 下有 MikTeX，Linux/UNIX 下有 teTeX 和 TeX Live。TeX 与它们的关系就像 Linux 内核与 Debian、Redhat、Arch 的关系一样。所以每个 TeX 发行版里都包含了 TeX，LaTeX 等等。&lt;/p&gt;
 &lt;h2 id="latex-cjkxecjk"&gt;LaTeX 与 CJK、xeCJK&lt;/h2&gt;
-&lt;p&gt;CJK、xeCJK 都是 LaTeX 的宏包，MacTeX.pkg 里面已经包含了它们，不必再自行安装。&lt;/p&gt;</summary><category term="LaTeX"></category><category term="Mac"></category></entry><entry><title>AES 加密算法的实现</title><link href="https://loggerhead.me/posts/aes-jia-mi-suan-fa-de-shi-xian.html" rel="alternate"></link><published>2014-03-24T17:27:37+08:00</published><updated>2014-03-24T17:27:37+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2014-03-24:posts/aes-jia-mi-suan-fa-de-shi-xian.html</id><summary type="html">&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard"&gt;AES (Advanced Encryption
+&lt;p&gt;CJK、xeCJK 都是 LaTeX 的宏包，MacTeX.pkg 里面已经包含了它们，不必再自行安装。&lt;/p&gt;</summary><category term="LaTeX"></category><category term="Mac"></category></entry><entry><title>AES 加密算法的实现</title><link href="https://loggerhead.me/posts/aes-jia-mi-suan-fa-de-shi-xian.html" rel="alternate"></link><published>2014-03-24T17:27:37+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2014-03-24:posts/aes-jia-mi-suan-fa-de-shi-xian.html</id><summary type="html">&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard"&gt;AES (Advanced Encryption
 Standard)&lt;/a&gt; 是由 NIST (美国国家标准与技术研究院) 发布于 &lt;a href="http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf"&gt;FIPS
 PUB 197&lt;/a&gt; 用来替代 &lt;a href="https://en.wikipedia.org/wiki/Data_Encryption_Standard"&gt;DES (Data Encryption
 Standard)&lt;/a&gt; 的高级加密标准。而 Rijndael 算法是被 NIST 认为符合 AES 且被采用的一种对称加密算法，所以一般对 AES 和 Rijndael 算法这两个概念不予细究。&lt;/p&gt;
@@ -8561,7 +8561,7 @@ S_{3,c}
 &lt;li&gt;循环左移 &lt;code&gt;rotword&lt;/code&gt;，和行移位 &lt;code&gt;ShiftRows&lt;/code&gt; 中的循环左移一样，这里将字中的每个字节循环左移 1 次；&lt;/li&gt;
 &lt;li&gt;字替换 &lt;code&gt;subword&lt;/code&gt;，使用 S-Box 替换字中的每个字节；&lt;/li&gt;
 &lt;li&gt;异或 &lt;code&gt;xor&lt;/code&gt;，将两个字进行异或。&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="AES"></category><category term="Rijndael"></category><category term="加密算法"></category></entry><entry><title>Java 同时初始化两个类</title><link href="https://loggerhead.me/posts/java-tong-shi-chu-shi-hua-liang-ge-lei.html" rel="alternate"></link><published>2012-12-07T20:00:00+08:00</published><updated>2012-12-07T20:00:00+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2012-12-07:posts/java-tong-shi-chu-shi-hua-liang-ge-lei.html</id><summary type="html">&lt;p&gt;同时初始化两个类的意义在于当两个类之间关系密切，即方法经常与另一个类进行通信时，可以简化通信。&lt;/p&gt;
+&lt;/ul&gt;</summary><category term="AES"></category><category term="Rijndael"></category><category term="加密算法"></category></entry><entry><title>Java 同时初始化两个类</title><link href="https://loggerhead.me/posts/java-tong-shi-chu-shi-hua-liang-ge-lei.html" rel="alternate"></link><published>2012-12-07T20:00:00+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2012-12-07:posts/java-tong-shi-chu-shi-hua-liang-ge-lei.html</id><summary type="html">&lt;p&gt;同时初始化两个类的意义在于当两个类之间关系密切，即方法经常与另一个类进行通信时，可以简化通信。&lt;/p&gt;
 
 
 &lt;p&gt;我们直接看代码：&lt;/p&gt;
@@ -8711,7 +8711,7 @@ S_{3,c}
     &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</summary><category term="Java"></category></entry><entry><title>Java 内部类用法小结</title><link href="https://loggerhead.me/posts/java-nei-bu-lei-yong-fa-xiao-jie.html" rel="alternate"></link><published>2012-07-31T16:20:00+08:00</published><updated>2012-07-31T16:20:00+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2012-07-31:posts/java-nei-bu-lei-yong-fa-xiao-jie.html</id><summary type="html">&lt;h2 id="_1"&gt;定义&lt;/h2&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</summary><category term="Java"></category></entry><entry><title>Java 内部类用法小结</title><link href="https://loggerhead.me/posts/java-nei-bu-lei-yong-fa-xiao-jie.html" rel="alternate"></link><published>2012-07-31T16:20:00+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2012-07-31:posts/java-nei-bu-lei-yong-fa-xiao-jie.html</id><summary type="html">&lt;h2 id="_1"&gt;定义&lt;/h2&gt;
 &lt;p&gt;顾名思义，创建于外部类之内的类。可以定义于外部类的方法内。下面用I类表内部类，O类表外部类。（I：inner，O：outer）&lt;/p&gt;
 &lt;h2 id="_2"&gt;用途&lt;/h2&gt;
 &lt;ol&gt;
@@ -9077,7 +9077,7 @@ S_{3,c}
     &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
-&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</summary><category term="Java"></category></entry><entry><title>Java 类的初始化顺序</title><link href="https://loggerhead.me/posts/java-lei-de-chu-shi-hua-shun-xu.html" rel="alternate"></link><published>2012-06-14T19:45:00+08:00</published><updated>2012-06-14T19:45:00+08:00</updated><author><name>loggerhead</name></author><id>tag:loggerhead.me,2012-06-14:posts/java-lei-de-chu-shi-hua-shun-xu.html</id><summary type="html">&lt;h2 id="_1"&gt;示例&lt;/h2&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</summary><category term="Java"></category></entry><entry><title>Java 类的初始化顺序</title><link href="https://loggerhead.me/posts/java-lei-de-chu-shi-hua-shun-xu.html" rel="alternate"></link><published>2012-06-14T19:45:00+08:00</published><author><name>loggerhead</name></author><id>tag:loggerhead.me,2012-06-14:posts/java-lei-de-chu-shi-hua-shun-xu.html</id><summary type="html">&lt;h2 id="_1"&gt;示例&lt;/h2&gt;
 &lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt; 1
  2
  3
@@ -9282,7 +9282,7 @@ S_{3,c}
 &lt;span class="cm"&gt; * 构造器应尽可能在不调用方法的条件下使用简单的方法使对象进入正常状态（以免多态性造成灾难）&lt;/span&gt;
 &lt;span class="cm"&gt; * 构造器可安全调用的方法是final方法（private方法属于final方法）&lt;/span&gt;
 &lt;span class="cm"&gt; */&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;static&lt;/span&gt; &lt;span class="n"&gt;java&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;lang&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.*;&lt;/span&gt;
+&lt;span class="kn"&gt;import static&lt;/span&gt; &lt;span class="nn"&gt;java.lang.System.*&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
 &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Ini1&lt;/span&gt;&lt;span class="o"&gt;{&lt;/span&gt;
     &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="nf"&gt;Ini1&lt;/span&gt;&lt;span class="o"&gt;(){&lt;/span&gt;
         &lt;span class="n"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Ini1() before&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
