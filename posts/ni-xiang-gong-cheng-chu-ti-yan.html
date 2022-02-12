@@ -35,13 +35,13 @@
   <title>  逆向工程初体验
 </title>
 
-<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.5a21e2a.css">
+  <link rel="stylesheet" href="../theme/css/style.5a21e2a.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-  <link href="https://loggerhead.me/atom.xml" rel="alternate" type="application/atom+xml">
+  <link href="../atom.xml" rel="alternate" type="application/atom+xml">
 </head>
 <body>
 
@@ -54,18 +54,18 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="https://loggerhead.me">loggerhead's blog</a>
+      <a class="navbar-brand" href="..">loggerhead's blog</a>
     </div>
     <div class="navbar-collapse navbar-ex1-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-          <a href="https://loggerhead.me/index.html">首页</a>
+          <a href="../index.html">首页</a>
         </li>
         <li>
-          <a href="https://loggerhead.me/archives.html">归档</a>
+          <a href="../archives.html">归档</a>
         </li>
         <li>
-          <a href="https://loggerhead.me/about.html">关于</a>
+          <a href="../about.html">关于</a>
         </li>
       </ul>
       <div class="navbar-right">
@@ -101,7 +101,7 @@
     <article>
       <header class="page-header">
         <h1>
-          <a class="article-title" href="https://loggerhead.me/posts/ni-xiang-gong-cheng-chu-ti-yan.html" rel="bookmark" title="Permalink to 逆向工程初体验">
+          <a class="article-title" href="../posts/ni-xiang-gong-cheng-chu-ti-yan.html" rel="bookmark" title="Permalink to 逆向工程初体验">
             逆向工程初体验
           </a>
         </h1>
@@ -109,10 +109,10 @@
   <div class="row">
     <div class="col-xs-8">
       <!-- <span class="label label-default">Tags</span> -->
-        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/hui-bian.html">
+        <a class="tag btn btn-xs" href="../tag/hui-bian.html">
           汇编
         </a>
-        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/linux.html">
+        <a class="tag btn btn-xs" href="../tag/linux.html">
           Linux
         </a>
     </div>
@@ -209,9 +209,9 @@ objdump -d bomb &gt; bomb.asm
 </td></tr></table>
 
 <p>这三行代码到底做了些什么，我们暂时不清楚，不过对 <code>main</code> 一番扫视让我们了解到炸弹大概类似于：</p>
-<p><img alt="bomb_main.jpg" src="https://cdn.loggerhead.me/images/bomb_main.jpg" /></p>
+<p><img alt="bomb_main.jpg" src="https://loggerhead.me/_images/bomb_main.jpg" /></p>
 <p>只有 6 次正确的输入才能解除炸弹，否则就会……</p>
-<p><img alt="bomb_exploded.jpg" src="https://cdn.loggerhead.me/images/bomb_exploded.jpg" /></p>
+<p><img alt="bomb_exploded.jpg" src="https://loggerhead.me/_images/bomb_exploded.jpg" /></p>
 <h1 id="_2">第一阶段</h1>
 <p>我们看到 <code>phase_1</code> 函数，结构比较简单，关键在于下面这几行在做什么：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
@@ -249,20 +249,20 @@ objdump -d bomb &gt; bomb.asm
 <p><code>0x80497c0</code> 看着像是字符串常量 <code>CONST_STRING</code> 的地址，<code>eax</code> 寄存器估计是存放了输入字符串的地址。另外，根据传参的原则——最先 <code>push</code> 的是最右边的参数，而且两个参数正好对应两次 <code>push</code>，这也进一步肯定了我们的想法。</p>
 <p>接下来我们通过 gdb 来验证一下。依次输入以下 gdb 命令，运行到 <code>8048b32</code> 这一行：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="highlight"><pre><span></span>b *0x8048b32
-r
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="err">b *0x8048b32</span>
+<span class="err">r</span>
 </pre></div>
 </td></tr></table>
 
 <p>我们尝试打印一下 <code>0x80497c0</code> 和 <code>eax</code> 指向的字符串：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="highlight"><pre><span></span>x/s 0x80497c0
-x/s $eax
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="err">x/s 0x80497c0</span>
+<span class="err">x/s $eax</span>
 </pre></div>
 </td></tr></table>
 
 <p>发现输出和我们预料的一样，<code>0x80497c0</code> 果然存放了字符串的地址，其指向的字符串是：</p>
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span>Public speaking is very easy.
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="err">Public speaking is very easy.</span>
 </pre></div>
 </td></tr></table>
 
@@ -1428,7 +1428,7 @@ x/s $eax
 <p>第六阶段非常难，没有动手写过一些 C 语言代码，几乎很难察觉到其中的奥秘。不过隐藏阶段才是真正的 BOSS……这里不详细说明了，照着上面的办法，慢慢的尝试，花点时间也能做出来。下面给几个提示，有兴趣的同学可以尝试尝试：</p>
 <ul>
 <li>在第四阶段加点料才能进入隐藏阶段</li>
-<li><img alt="fun7_tree" src="https://cdn.loggerhead.me/images/fun7_tree.png" /></li>
+<li><img alt="fun7_tree" src="https://loggerhead.me/_images/fun7_tree.png" /></li>
 </ul>
 <p>成功解决这个炸弹相信非常有成就感，不过其实拆除炸弹有个十分简单的办法——<code>Ctrl+C</code> :P</p>
       </div>
@@ -1494,14 +1494,14 @@ var disqus_config = function () {
     </div>
   </div>
 </footer>
-    <script src="https://loggerhead.me/theme/js/bag.2.0.2.min.js"></script>
+    <script src="../theme/js/bag.2.0.2.min.js"></script>
 
 <script id="myscripts">
 bag = new window.Bag();
 
 bag.require([
-    "//cdn.bootcss.com/jquery/2.2.1/jquery.min.js",
-    "//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"
+    "https//cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js",
+    "https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"
 ]);
 
 function load_css(url, done) {
@@ -1586,7 +1586,7 @@ function gestureStart() {
     }
 
     bag.require([
-        "//cdn.bootcss.com/KaTeX/0.6.0/katex.min.js"
+        "https://cdn.jsdelivr.net/npm/katex@0.6.0/dist/katex.min.js"
     ]).then(function() {
         for (var i = 0; i < maths.length; i++) {
             var math = maths[i];
@@ -1610,7 +1610,7 @@ function gestureStart() {
         }
     });
 
-    load_css("//cdn.bootcss.com/KaTeX/0.6.0/katex.min.css");
+    load_css("https://cdn.jsdelivr.net/npm/katex@0.6.0/dist/katex.min.css");
 })("math");
 </script>
 
@@ -1618,8 +1618,8 @@ function gestureStart() {
 <!--[if lt IE 9]>
   <script>
   bag.require([
-    "//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js",
-    "//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"
+    "https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js",
+    "https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"
   ]);
   </script>
 <![endif]-->

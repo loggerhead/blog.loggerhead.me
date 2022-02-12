@@ -35,13 +35,13 @@
   <title>  AES 加密算法的实现
 </title>
 
-<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.5a21e2a.css">
+  <link rel="stylesheet" href="../theme/css/style.5a21e2a.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-  <link href="https://loggerhead.me/atom.xml" rel="alternate" type="application/atom+xml">
+  <link href="../atom.xml" rel="alternate" type="application/atom+xml">
 </head>
 <body>
 
@@ -54,18 +54,18 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="https://loggerhead.me">loggerhead's blog</a>
+      <a class="navbar-brand" href="..">loggerhead's blog</a>
     </div>
     <div class="navbar-collapse navbar-ex1-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-          <a href="https://loggerhead.me/index.html">首页</a>
+          <a href="../index.html">首页</a>
         </li>
         <li>
-          <a href="https://loggerhead.me/archives.html">归档</a>
+          <a href="../archives.html">归档</a>
         </li>
         <li>
-          <a href="https://loggerhead.me/about.html">关于</a>
+          <a href="../about.html">关于</a>
         </li>
       </ul>
       <div class="navbar-right">
@@ -101,7 +101,7 @@
     <article>
       <header class="page-header">
         <h1>
-          <a class="article-title" href="https://loggerhead.me/posts/aes-jia-mi-suan-fa-de-shi-xian.html" rel="bookmark" title="Permalink to AES 加密算法的实现">
+          <a class="article-title" href="../posts/aes-jia-mi-suan-fa-de-shi-xian.html" rel="bookmark" title="Permalink to AES 加密算法的实现">
             AES 加密算法的实现
           </a>
         </h1>
@@ -109,13 +109,13 @@
   <div class="row">
     <div class="col-xs-8">
       <!-- <span class="label label-default">Tags</span> -->
-        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/aes.html">
+        <a class="tag btn btn-xs" href="../tag/aes.html">
           AES
         </a>
-        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/rijndael.html">
+        <a class="tag btn btn-xs" href="../tag/rijndael.html">
           Rijndael
         </a>
-        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/jia-mi-suan-fa.html">
+        <a class="tag btn btn-xs" href="../tag/jia-mi-suan-fa.html">
           加密算法
         </a>
     </div>
@@ -258,7 +258,7 @@ Standard)</a> 的高级加密标准。而 Rijndael 算法是被 NIST 认为符�
 &amp;=x^7+x^6+1 \ \ \ \Longleftrightarrow \ \ \ 11000001 \\
 \end{aligned}
 </div>
-<p><img alt="模除多项式" src="https://cdn.loggerhead.me/images/模除多项式.png" /></p>
+<p><img alt="模除多项式" src="https://loggerhead.me/_images/模除多项式.png" /></p>
 <h1 id="_4">算法说明</h1>
 <p>Rijndael 是带有可变块长和可变密钥长度的迭代块密码，它的输入和输出均为 128 bits 的数据分组 (blocks)，使用的密钥可以为 128，192 或 256 bits。由于块密码自身只能加密特定长度的单块数据，若要加密变长数据，则数据必须先被划分为一些单独的密码块。通常而言，最后一块数据需要使用合适填充方式将数据扩展到符合密码块大小的长度。一种工作模式描述了加密每一数据块的过程，常见的有 CBC、ECB、CTR、OCF、CFB 五种工作模式，我们下面的介绍都是指 CBC 模式。</p>
 <p>对于加密和解密变换，Rijndael 算法使用 4 个不同的以字节为基本单位的变换复合而成：</p>
@@ -270,7 +270,7 @@ Standard)</a> 的高级加密标准。而 Rijndael 算法是被 NIST 认为符�
 </ul>
 <h2 id="_5">预处理</h2>
 <p>假设我们要加密的字符串是 unicode 编码的 <code>hello,world=你好,世界</code>，那么将它进行处理并填充后的数据块为：</p>
-<p><img alt="Rijndael算法预处理" src="https://cdn.loggerhead.me/images/Rijndael算法预处理.png" /></p>
+<p><img alt="Rijndael算法预处理" src="https://loggerhead.me/_images/Rijndael算法预处理.png" /></p>
 <p>原始输入有两个问题需要进行处理。首先，unicode 编码的字母 <code>a</code> 和汉字 <code>啊</code> 分别占用了 1 byte 和 2 bytes，也就是字符可能占用 1 到 2 个字节。问题在于，如果不能保证字符占用的字节个数，那么解密的时候就无法知道应当把某个字节当做一个字母处理，还是一个汉字的某个字节处理。所以，我们将所有只占用 1 byte 的字符高位填充 <code>0</code>，使所有的字符均占用 2 bytes。其次，最后一个块只有 2 bytes (<code>{75 4C}</code>)，但是算法的处理单位是数据块，也就是 <span class="math">4*4</span> bytes (即128 bits) 。于是我们采用 <a href="https://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS7">PKCS7 的填充算法</a>填充 14 (<code>14 = 0x0E</code>) 个 <code>{0E}</code>，使最后一个块也占用 16 bytes。注意，如果最后一个块正好占用 16 bytes，那么新增一个块并填充 16 个 <code>{10}</code>。</p>
 <h2 id="_6">伪代码</h2>
 <p>AES 算法的加密解密伪代码如下所示：</p>
@@ -372,7 +372,7 @@ Standard)</a> 的高级加密标准。而 Rijndael 算法是被 NIST 认为符�
 <h1 id="_7">算法实现</h1>
 <h2 id="subbytes">字节替代 SubBytes</h2>
 <p>字节替代变换是一个非线性的字节替代，它独立地将状态 <code>state</code> 中的每个字节利用替代表 (S-Box) 进行运算。运算规则是：将字节的高 4 位作为 x，低 4 位作为 y 进行查表得到变换后的字节。比如：<code>{49}</code> 由行标为 4，列标为 9 的单元决定，变换结果为 <code>{3B}</code>。</p>
-<p><img alt="state_and_S-Box" src="https://cdn.loggerhead.me/images/state_and_S-Box.png" /></p>
+<p><img alt="state_and_S-Box" src="https://loggerhead.me/_images/state_and_S-Box.png" /></p>
 <h3 id="s-box">S-Box 的生成</h3>
 <p>任意字节 <span class="math">A=\{xy\}</span> 在 S-Box 中对应单元 <span class="math">B^{'}</span> 都由两个变换得到:</p>
 <p>(1) 在有限域 <span class="math">GF(2^8)</span> 上找到使 <span class="math">A\cdot B=1</span> 的 <span class="math">B</span>，其中 <span class="math">A=\{00\}</span> 时 <span class="math">B=\{00\}</span>。实现的伪代码如下：</p>
@@ -460,7 +460,7 @@ B_0
 <p>其中，<code>inv_S_Box</code> 的每个单元都是通过逆向查询 S-Box 得到的，例如：对于字节 <code>{3B}</code>，<code>inv_S_Box[3][B]=49</code>。</p>
 <h2 id="shiftrows">行移位 ShiftRows</h2>
 <p>将 <code>state</code> 的每一行左循环移位 r 次 (r 为行号，且 <span class="math">0 \leq r&lt;3</span>) ，如下图所示：</p>
-<p><img alt="行移位ShiftRows" src="https://cdn.loggerhead.me/images/行移位ShiftRows.png" /></p>
+<p><img alt="行移位ShiftRows" src="https://loggerhead.me/_images/行移位ShiftRows.png" /></p>
 <h3 id="invshiftrows">逆行移位 invShiftRows</h3>
 <p><code>invShiftRows</code> 与 <code>ShiftRows</code> 的唯一区别在于，左循环移位变成了右循环移位。</p>
 <h2 id="mixcolumns">列混合 MixColumns</h2>
@@ -494,7 +494,7 @@ S^{'}_{2,c}=S_{0,c} \oplus S_{1,c} \oplus (\{02\}\cdot S_{2,c}) \oplus (\{03\}\c
 S^{'}_{3,c}=(\{03\}\cdot S_{0,c}) \oplus S_{1,c} \oplus S_{2,c} \oplus (\{02\}\cdot S_{3,c})\\
 \end{aligned}
 </div>
-<p><img alt="列混合MixColumns" src="https://cdn.loggerhead.me/images/列混合MixColumns.png" /></p>
+<p><img alt="列混合MixColumns" src="https://loggerhead.me/_images/列混合MixColumns.png" /></p>
 <h3 id="invmixcolumns">逆列混合 invMixColumns</h3>
 <p><code>invMixColumns</code> 与 <code>MixColumns</code> 区别不大，只不过将相乘的多项式换成了 <span class="math">\{0B\}x^3+\{0D\}x^2+\{09\}x+\{0E\}</span>，也可表示为矩阵形式：</p>
 <div class="math">
@@ -544,7 +544,7 @@ S_{3,c}
 \end{bmatrix}
 </div>
 <p>其中 <span class="math">w=KeyExpansion(key)</span>，<span class="math">l=round*Nb</span>，round 是当前轮数，且 <span class="math">0 \leq round \leq Nr</span>，<span class="math">w_{l+c,n}</span> 表示 <code>w</code> 数组中下标为 <code>l+c</code> 的字的第 n+1 个字节 (最高位位于第 1 个字节) 。</p>
-<p><img alt="轮密钥加变换" src="https://cdn.loggerhead.me/images/轮密钥加变换.png" /></p>
+<p><img alt="轮密钥加变换" src="https://loggerhead.me/_images/轮密钥加变换.png" /></p>
 <h2 id="keyexpansion">密钥扩展 KeyExpansion</h2>
 <p><code>KeyExpansion</code> 调用后生成 <span class="math">Nb*(Nr+1)</span> 个字，即 <span class="math">4*Nb*(Nr+1)</span> bytes。我们先看一段伪代码加深一下理解：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -726,14 +726,14 @@ var disqus_config = function () {
     </div>
   </div>
 </footer>
-    <script src="https://loggerhead.me/theme/js/bag.2.0.2.min.js"></script>
+    <script src="../theme/js/bag.2.0.2.min.js"></script>
 
 <script id="myscripts">
 bag = new window.Bag();
 
 bag.require([
-    "//cdn.bootcss.com/jquery/2.2.1/jquery.min.js",
-    "//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"
+    "https//cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js",
+    "https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"
 ]);
 
 function load_css(url, done) {
@@ -818,7 +818,7 @@ function gestureStart() {
     }
 
     bag.require([
-        "//cdn.bootcss.com/KaTeX/0.6.0/katex.min.js"
+        "https://cdn.jsdelivr.net/npm/katex@0.6.0/dist/katex.min.js"
     ]).then(function() {
         for (var i = 0; i < maths.length; i++) {
             var math = maths[i];
@@ -842,7 +842,7 @@ function gestureStart() {
         }
     });
 
-    load_css("//cdn.bootcss.com/KaTeX/0.6.0/katex.min.css");
+    load_css("https://cdn.jsdelivr.net/npm/katex@0.6.0/dist/katex.min.css");
 })("math");
 </script>
 
@@ -850,8 +850,8 @@ function gestureStart() {
 <!--[if lt IE 9]>
   <script>
   bag.require([
-    "//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js",
-    "//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"
+    "https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js",
+    "https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"
   ]);
   </script>
 <![endif]-->

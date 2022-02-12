@@ -35,13 +35,13 @@
   <title>  给 GitHub 项目戴上勋章
 </title>
 
-<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.5a21e2a.css">
+  <link rel="stylesheet" href="../theme/css/style.5a21e2a.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-  <link href="https://loggerhead.me/atom.xml" rel="alternate" type="application/atom+xml">
+  <link href="../atom.xml" rel="alternate" type="application/atom+xml">
 </head>
 <body>
 
@@ -54,18 +54,18 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="https://loggerhead.me">loggerhead's blog</a>
+      <a class="navbar-brand" href="..">loggerhead's blog</a>
     </div>
     <div class="navbar-collapse navbar-ex1-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-          <a href="https://loggerhead.me/index.html">首页</a>
+          <a href="../index.html">首页</a>
         </li>
         <li>
-          <a href="https://loggerhead.me/archives.html">归档</a>
+          <a href="../archives.html">归档</a>
         </li>
         <li>
-          <a href="https://loggerhead.me/about.html">关于</a>
+          <a href="../about.html">关于</a>
         </li>
       </ul>
       <div class="navbar-right">
@@ -101,7 +101,7 @@
     <article>
       <header class="page-header">
         <h1>
-          <a class="article-title" href="https://loggerhead.me/posts/gei-github-xiang-mu-dai-shang-xun-zhang.html" rel="bookmark" title="Permalink to 给 GitHub 项目戴上勋章">
+          <a class="article-title" href="../posts/gei-github-xiang-mu-dai-shang-xun-zhang.html" rel="bookmark" title="Permalink to 给 GitHub 项目戴上勋章">
             给 GitHub 项目戴上勋章
           </a>
         </h1>
@@ -109,10 +109,10 @@
   <div class="row">
     <div class="col-xs-8">
       <!-- <span class="label label-default">Tags</span> -->
-        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/github.html">
+        <a class="tag btn btn-xs" href="../tag/github.html">
           GitHub
         </a>
-        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/non-tech.html">
+        <a class="tag btn btn-xs" href="../tag/non-tech.html">
           non-tech
         </a>
     </div>
@@ -173,22 +173,22 @@
 14
 15
 16
-17</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">language</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">python</span>
-<span class="l l-Scalar l-Scalar-Plain">python</span><span class="p p-Indicator">:</span>
+17</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">language</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="nt">python</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="s">&quot;2.7&quot;</span>
   <span class="p p-Indicator">-</span> <span class="s">&quot;3.3&quot;</span>
   <span class="p p-Indicator">-</span> <span class="s">&quot;3.4&quot;</span>
   <span class="p p-Indicator">-</span> <span class="s">&quot;3.5&quot;</span>
-<span class="l l-Scalar l-Scalar-Plain">install</span><span class="p p-Indicator">:</span>
+<span class="nt">install</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip install coveralls</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip install lxml click</span>
-<span class="l l-Scalar l-Scalar-Plain">cache</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">directories</span><span class="p p-Indicator">:</span>
+<span class="nt">cache</span><span class="p">:</span>
+  <span class="nt">directories</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">$HOME/.cache/pip</span>
-<span class="l l-Scalar l-Scalar-Plain">script</span><span class="p p-Indicator">:</span>
+<span class="nt">script</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">python setup.py install</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">nosetests --with-coverage --cover-package=easy_karabiner</span>
-<span class="l l-Scalar l-Scalar-Plain">after_success</span><span class="p p-Indicator">:</span>
+<span class="nt">after_success</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">coveralls</span>
 </pre></div>
 </td></tr></table>
@@ -203,8 +203,8 @@
 <p>只有所有的操作都执行成功，它才会 passing 。</p>
 <h3 id="coveralls">Coveralls <img alt="Coveralls badge" src="https://img.shields.io/coveralls/loggerhead/Easy-Karabiner.svg" /></h3>
 <p><a href="https://coveralls.io/">Coveralls</a> 是一个提供测试覆盖率分析的网站，它能告诉你每个文件的测试覆盖率是多少，甚至代码中哪些行没有被测试用例覆盖到也能在报告中看到。更棒的是，对开源项目永久免费！</p>
-<p><img alt="coveralls-example-file.png" src="https://cdn.loggerhead.me/images/coveralls-example-file.png" />
-<img alt="coveralls-example-detail.png" src="https://cdn.loggerhead.me/images/coveralls-example-detail.png" /></p>
+<p><img alt="coveralls-example-file.png" src="https://loggerhead.me/_images/coveralls-example-file.png" />
+<img alt="coveralls-example-detail.png" src="https://loggerhead.me/_images/coveralls-example-detail.png" /></p>
 <p>Coveralls 的使用和 Travis CI 略有不同，其步骤如下（详见 Travis CI 中的示例）：</p>
 <ol>
 <li>与 GitHub 帐号关联，Turn on 需要分析的 repo</li>
@@ -224,17 +224,17 @@
 </ul>
 <h3 id="landscape">Landscape <img alt="Landscape badge" src="https://landscape.io/github/loggerhead/Easy-Karabiner/master/landscape.svg" /></h3>
 <p><a href="https://landscape.io/">Landscape</a> 是<strong>提供 Python 代码质量分析</strong>的网站，它能帮助你发现代码中的错误或「坏味道」，比如：</p>
-<p><img alt="landscape-example-warning.png" src="https://cdn.loggerhead.me/images/landscape-example-warning.png" />
-<img alt="landscape-example-error.png" src="https://cdn.loggerhead.me/images/landscape-example-error.png" /></p>
+<p><img alt="landscape-example-warning.png" src="https://loggerhead.me/_images/landscape-example-warning.png" />
+<img alt="landscape-example-error.png" src="https://loggerhead.me/_images/landscape-example-error.png" /></p>
 <p>同样，它也能给出每个文件的「健康情况」：</p>
-<p><img alt="landscape-example-score.png" src="https://cdn.loggerhead.me/images/landscape-example-score.png" /></p>
+<p><img alt="landscape-example-score.png" src="https://loggerhead.me/_images/landscape-example-score.png" /></p>
 <p>Landscape 默认使用 <a href="https://github.com/PyCQA/pylint">pylint</a> 进行分析，也可以创建 <code>.landscape.yml</code> 文件，并在里面配置使用其他工具或者 disable 一些检查，比如：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
-5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">pylint</span><span class="p p-Indicator">:</span>
-    <span class="l l-Scalar l-Scalar-Plain">disable</span><span class="p p-Indicator">:</span>
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nt">pylint</span><span class="p">:</span>
+    <span class="nt">disable</span><span class="p">:</span>
         <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">unused-argument</span>
         <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">redefined-builtin</span>
         <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">arguments-differ</span>
@@ -332,14 +332,14 @@ var disqus_config = function () {
     </div>
   </div>
 </footer>
-    <script src="https://loggerhead.me/theme/js/bag.2.0.2.min.js"></script>
+    <script src="../theme/js/bag.2.0.2.min.js"></script>
 
 <script id="myscripts">
 bag = new window.Bag();
 
 bag.require([
-    "//cdn.bootcss.com/jquery/2.2.1/jquery.min.js",
-    "//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"
+    "https//cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js",
+    "https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"
 ]);
 
 function load_css(url, done) {
@@ -424,7 +424,7 @@ function gestureStart() {
     }
 
     bag.require([
-        "//cdn.bootcss.com/KaTeX/0.6.0/katex.min.js"
+        "https://cdn.jsdelivr.net/npm/katex@0.6.0/dist/katex.min.js"
     ]).then(function() {
         for (var i = 0; i < maths.length; i++) {
             var math = maths[i];
@@ -448,7 +448,7 @@ function gestureStart() {
         }
     });
 
-    load_css("//cdn.bootcss.com/KaTeX/0.6.0/katex.min.css");
+    load_css("https://cdn.jsdelivr.net/npm/katex@0.6.0/dist/katex.min.css");
 })("math");
 </script>
 
@@ -456,8 +456,8 @@ function gestureStart() {
 <!--[if lt IE 9]>
   <script>
   bag.require([
-    "//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js",
-    "//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"
+    "https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js",
+    "https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"
   ]);
   </script>
 <![endif]-->

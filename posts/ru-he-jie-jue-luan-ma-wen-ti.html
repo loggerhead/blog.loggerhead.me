@@ -35,13 +35,13 @@
   <title>  如何解决乱码问题？
 </title>
 
-<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
 
-  <link rel="stylesheet" href="https://loggerhead.me/theme/css/style.5a21e2a.css">
+  <link rel="stylesheet" href="../theme/css/style.5a21e2a.css">
  
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-  <link href="https://loggerhead.me/atom.xml" rel="alternate" type="application/atom+xml">
+  <link href="../atom.xml" rel="alternate" type="application/atom+xml">
 </head>
 <body>
 
@@ -54,18 +54,18 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="https://loggerhead.me">loggerhead's blog</a>
+      <a class="navbar-brand" href="..">loggerhead's blog</a>
     </div>
     <div class="navbar-collapse navbar-ex1-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-          <a href="https://loggerhead.me/index.html">首页</a>
+          <a href="../index.html">首页</a>
         </li>
         <li>
-          <a href="https://loggerhead.me/archives.html">归档</a>
+          <a href="../archives.html">归档</a>
         </li>
         <li>
-          <a href="https://loggerhead.me/about.html">关于</a>
+          <a href="../about.html">关于</a>
         </li>
       </ul>
       <div class="navbar-right">
@@ -101,7 +101,7 @@
     <article>
       <header class="page-header">
         <h1>
-          <a class="article-title" href="https://loggerhead.me/posts/ru-he-jie-jue-luan-ma-wen-ti.html" rel="bookmark" title="Permalink to 如何解决乱码问题？">
+          <a class="article-title" href="../posts/ru-he-jie-jue-luan-ma-wen-ti.html" rel="bookmark" title="Permalink to 如何解决乱码问题？">
             如何解决乱码问题？
           </a>
         </h1>
@@ -109,13 +109,13 @@
   <div class="row">
     <div class="col-xs-8">
       <!-- <span class="label label-default">Tags</span> -->
-        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/gong-cheng-wen-ti.html">
+        <a class="tag btn btn-xs" href="../tag/gong-cheng-wen-ti.html">
           工程问题
         </a>
-        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/python.html">
+        <a class="tag btn btn-xs" href="../tag/python.html">
           Python
         </a>
-        <a class="tag btn btn-xs" href="https://loggerhead.me/tag/golang.html">
+        <a class="tag btn btn-xs" href="../tag/golang.html">
           Golang
         </a>
     </div>
@@ -148,7 +148,7 @@
 </div>
 <h2 id="_1">乱码分析思路</h2>
 <p>乱码是由于底层的数据与其表现形式不一致造成的，因此要理清乱码，首先要清楚数据流的变化。数据流可以抽象成：</p>
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span>输入 -&gt; 程序 -&gt; 输出
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="err">输入 -&gt; 程序 -&gt; 输出</span>
 </pre></div>
 </td></tr></table>
 
@@ -215,11 +215,11 @@
 2
 3
 4
-5</pre></div></td><td class="code"><div class="highlight"><pre><span></span>1. 用户改昵称 --------------&gt; 后台接口
-              UTF-8 转 GBK
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="mi">1</span><span class="p">.</span> <span class="err">用户改昵称</span> <span class="c1">--------------&gt; 后台接口</span>
+              <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="err">转</span> <span class="n">GBK</span>
 
-2. 后台接口 ----------------&gt; 前端页面
-              GBK 转 UTF-8
+<span class="mi">2</span><span class="p">.</span> <span class="err">后台接口</span> <span class="c1">----------------&gt; 前端页面</span>
+              <span class="n">GBK</span> <span class="err">转</span> <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
 </pre></div>
 </td></tr></table>
 
@@ -238,8 +238,8 @@
 <p>一个字节只能表示 256 个不同的字符，显然无法表示所有的文字，因此有了编码的概念。编码告诉计算机，哪些字节组成一个字符，或者怎么将一个字符存储成字节序列。同样的字符串，不同编码底层的字节序列可能是不同的。</p>
 <p>以“你好”两个字为例，它的 GBK 和 UTF-8 的字节序列分别为：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  GBK: 0xC4 0xE3 0xBA 0xC3
-UTF-8: 0xE4 0xBD 0xA0 0xE5 0xA5 0xBD
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="err">  GBK: 0xC4 0xE3 0xBA 0xC3</span>
+<span class="c">UTF-8: 0xE4 0xBD 0xA0 0xE5 0xA5 0xBD</span>
 </pre></div>
 </td></tr></table>
 
@@ -254,15 +254,15 @@ UTF-8: 0xE4 0xBD 0xA0 0xE5 0xA5 0xBD
 <h3 id="unicode-utf-8">Unicode 与 UTF-8</h3>
 <p>计算机只存储二进制数字，因此是无法表示字符的。除非字符与数字之间能够一一映射，这样字符就能用数字表示了。最原始的 ASCII 码就定义了英文字母与数字间的映射关系，比如：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="highlight"><pre><span></span> h   e   l   l   o
-104 101 108 108 111
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="err"> h   e   l   l   o</span>
+<span class="err">104 101 108 108 111</span>
 </pre></div>
 </td></tr></table>
 
 <p>ASCII 码的问题在于它无法表示包括中文、日文在内的非英文字符，因此有了 Unicode。Unicode（Universal Coded Character Set）是一组字符集，定义了每个字符与数字之间的映射关系，一个 Unicode 字符通常用 <code>U+</code> 和两个十六进制数来表示。比如：</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="highlight"><pre><span></span>  你     好
-U+4F60 U+597D
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="err">  你     好</span>
+<span class="err">U+4F60 U+597D</span>
 </pre></div>
 </td></tr></table>
 
@@ -523,14 +523,14 @@ var disqus_config = function () {
     </div>
   </div>
 </footer>
-    <script src="https://loggerhead.me/theme/js/bag.2.0.2.min.js"></script>
+    <script src="../theme/js/bag.2.0.2.min.js"></script>
 
 <script id="myscripts">
 bag = new window.Bag();
 
 bag.require([
-    "//cdn.bootcss.com/jquery/2.2.1/jquery.min.js",
-    "//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"
+    "https//cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js",
+    "https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"
 ]);
 
 function load_css(url, done) {
@@ -615,7 +615,7 @@ function gestureStart() {
     }
 
     bag.require([
-        "//cdn.bootcss.com/KaTeX/0.6.0/katex.min.js"
+        "https://cdn.jsdelivr.net/npm/katex@0.6.0/dist/katex.min.js"
     ]).then(function() {
         for (var i = 0; i < maths.length; i++) {
             var math = maths[i];
@@ -639,7 +639,7 @@ function gestureStart() {
         }
     });
 
-    load_css("//cdn.bootcss.com/KaTeX/0.6.0/katex.min.css");
+    load_css("https://cdn.jsdelivr.net/npm/katex@0.6.0/dist/katex.min.css");
 })("math");
 </script>
 
@@ -647,8 +647,8 @@ function gestureStart() {
 <!--[if lt IE 9]>
   <script>
   bag.require([
-    "//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js",
-    "//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"
+    "https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js",
+    "https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"
   ]);
   </script>
 <![endif]-->
